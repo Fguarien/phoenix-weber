@@ -28,9 +28,16 @@ phoenix-weber/
 
 ## Modèle
 
-- **Appareil :** Weber Spirit E310
-- **Année :** 2007
-- **Référence grille :** 3 brûleurs, propane/naturel, fonte/acier
+| Champ | Valeur |
+|-------|--------|
+| Gamme | Weber Genesis |
+| Modèle | **Genesis E-310** |
+| N° de modèle | **3741001** |
+| N° de série | **DZ 0145390** |
+| Millésime | **2007** |
+| Type de gaz | Propane (LP) |
+| Position commandes | **Latérales** (tablette droite) |
+| Brûleurs | 3 × 14 000 Btu/hr = 42 000 Btu/hr |
 
 ## Suivi
 
