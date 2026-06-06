@@ -1,589 +1,1422 @@
-<!DOCTYPE html>
-<html lang="fr" data-theme="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projet Phénix — Weber Genesis E-310 (2007)</title>
+<!doctype html>
+<html lang="fr" data-theme="dark"><head><script data-od-sandbox-shim="">(function(){
+  function makeStore(){
+    var data = {};
+    var api = {
+      getItem: function(k){ return Object.prototype.hasOwnProperty.call(data, k) ? data[k] : null; },
+      setItem: function(k, v){ data[k] = String(v); },
+      removeItem: function(k){ delete data[k]; },
+      clear: function(){ data = {}; },
+      key: function(i){ return Object.keys(data)[i] || null; }
+    };
+    Object.defineProperty(api, 'length', { get: function(){ return Object.keys(data).length; } });
+    return api;
+  }
+  function tryShim(name){
+    var works = false;
+    try { works = !!window[name] && typeof window[name].getItem === 'function'; void window[name].length; }
+    catch (_) { works = false; }
+    if (works) return;
+    try { Object.defineProperty(window, name, { configurable: true, value: makeStore() }); }
+    catch (_) { try { window[name] = makeStore(); } catch (__) {} }
+  }
+  tryShim('localStorage');
+  tryShim('sessionStorage');
+  document.addEventListener('click', (e) => {
+    if (!e.target || !(e.target instanceof Element)) return;
+    var link = e.target.closest('a[href]');
+    if (!link) return;
+    var href = link.getAttribute('href');
+    if (href === null) return;
+    var isAnchor = href.startsWith('#') || href === '';
+    if (isAnchor) {
+      e.preventDefault();
+      if (href === '' || href === '#') {
+        window.scrollTo({ top: 0 });
+        history.replaceState(null, '', ' ');
+      } else {
+        var targetId = href.slice(1);
+        var target = targetId ? document.getElementById(targetId) : null;
+        if (target) {
+          target.scrollIntoView();
+          location.hash === href && history.replaceState(null, '', ' ');
+          location.hash = href;
+        }
+      }
+    } else if (link.getAttribute('target') === '_blank') {
+      e.preventDefault();
+      let safe = false;
+      try {
+        var url = new URL(href, location.href);
+        safe =
+          url.protocol === 'http:' ||
+          url.protocol === 'https:' ||
+          url.protocol === 'mailto:';
+      } catch (_) {}
+      safe && window.open(href, '_blank', 'noopener,noreferrer');
+    }
+  });
+})();</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phoenix Weber — Restauration Genesis E-310 (2007)</title>
+<meta name="description" content="Journal de restauration d'un Weber Genesis E-310 de 2007, récupéré gratuitement et remis à neuf. Diagnostic, pièces, commandes, travaux et résultat.">
 <style>
-  :root[data-theme="dark"] {
-    --bg: #1a1a1a;
-    --bg2: #242424;
-    --bg3: #2e2e2e;
-    --border: #3a3a3a;
-    --text: #e8e4df;
-    --text2: #a09890;
-    --accent: #c85a1c;
-    --accent2: #e07040;
-    --ok: #4caf6e;
-    --warn: #e8a030;
-    --danger: #e04040;
-    --badge-ok: rgba(76,175,110,.15);
-    --badge-warn: rgba(232,160,48,.15);
-    --badge-danger: rgba(224,64,64,.15);
-    --shadow: 0 2px 16px rgba(0,0,0,.4);
-  }
-  :root[data-theme="light"] {
-    --bg: #f5f1ec;
-    --bg2: #fff;
-    --bg3: #ece8e2;
-    --border: #d5cfc7;
-    --text: #1e1a18;
-    --text2: #7a6e65;
-    --accent: #c85a1c;
-    --accent2: #a84510;
-    --ok: #2e7d4f;
-    --warn: #a06010;
-    --danger: #c03030;
-    --badge-ok: rgba(46,125,79,.12);
-    --badge-warn: rgba(160,96,16,.12);
-    --badge-danger: rgba(192,48,48,.12);
-    --shadow: 0 2px 16px rgba(0,0,0,.08);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    transition: background .2s, color .2s;
-  }
-  /* ── Header ── */
-  header {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: var(--shadow);
-  }
-  .header-inner {
-    max-width: 1100px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between;
-    height: 64px;
-  }
-  .logo { display: flex; align-items: center; gap: .75rem; }
-  .logo-icon { font-size: 1.6rem; }
-  .logo-text { font-size: 1.05rem; font-weight: 700; letter-spacing: -.02em; }
-  .logo-sub { font-size: .75rem; color: var(--text2); font-weight: 400; }
-  .theme-toggle {
-    background: var(--bg3); border: 1px solid var(--border);
-    color: var(--text); border-radius: 8px;
-    padding: .4rem .8rem; cursor: pointer; font-size: .85rem;
-    transition: background .2s;
-  }
-  .theme-toggle:hover { background: var(--border); }
-  /* ── Hero ── */
-  .hero {
-    background: linear-gradient(135deg, #1a0f08 0%, #2e1a10 40%, #1a1a1a 100%);
-    padding: 4rem 2rem 3rem;
-    text-align: center;
-    position: relative; overflow: hidden;
-  }
-  [data-theme="light"] .hero {
-    background: linear-gradient(135deg, #3d1a08 0%, #7a3010 40%, #2c1a10 100%);
-  }
-  .hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at center, rgba(200,90,28,.15) 0%, transparent 70%);
-  }
-  .hero-content { position: relative; max-width: 700px; margin: 0 auto; }
-  .hero-badge {
-    display: inline-block;
-    background: var(--accent); color: #fff;
-    font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-    padding: .3rem .8rem; border-radius: 20px; margin-bottom: 1.2rem;
-  }
-  .hero h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 800; letter-spacing: -.04em;
-    color: #fff; line-height: 1.15; margin-bottom: .8rem;
-  }
-  .hero h1 span { color: var(--accent2); }
-  .hero-sub { color: rgba(255,255,255,.65); font-size: 1.05rem; margin-bottom: 2rem; }
-  .hero-meta {
-    display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
-  }
-  .meta-item { color: rgba(255,255,255,.55); font-size: .85rem; }
-  .meta-item strong { color: rgba(255,255,255,.9); font-weight: 600; }
-  /* ── Layout ── */
-  main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; }
-  .section { margin-bottom: 3rem; }
-  h2 {
-    font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em;
-    margin-bottom: 1.25rem;
-    display: flex; align-items: center; gap: .6rem;
-  }
-  h2::after {
-    content: ''; flex: 1; height: 1px;
-    background: linear-gradient(to right, var(--border), transparent);
-  }
-  h2 .icon { font-size: 1.1rem; }
-  /* ── Alert / warning ── */
-  .alert {
-    border-radius: 10px; padding: 1rem 1.2rem;
-    font-size: .9rem; border: 1px solid;
-    margin-bottom: 1.5rem;
-    display: flex; align-items: flex-start; gap: .8rem;
-  }
-  .alert-danger {
-    background: var(--badge-danger); border-color: var(--danger); color: var(--danger);
-  }
-  .alert-ok {
-    background: var(--badge-ok); border-color: var(--ok); color: var(--ok);
-  }
-  .alert strong { font-weight: 700; }
-  /* ── Spec grid ── */
-  .spec-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem; margin-bottom: 1.5rem;
-  }
-  .spec-card {
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 12px; padding: 1rem 1.2rem;
-    transition: border-color .2s;
-  }
-  .spec-card:hover { border-color: var(--accent); }
-  .spec-label { font-size: .72rem; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .3rem; }
-  .spec-value { font-size: 1rem; font-weight: 700; color: var(--text); }
-  /* ── Photo gallery ── */
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
-  }
-  .gallery-item {
-    border-radius: 12px; overflow: hidden;
-    border: 1px solid var(--border);
-    cursor: pointer; transition: transform .2s, box-shadow .2s;
-    background: var(--bg2);
-    aspect-ratio: 4/3;
-  }
-  .gallery-item:hover { transform: scale(1.02); box-shadow: 0 8px 32px rgba(200,90,28,.25); }
-  .gallery-item img {
-    width: 100%; height: 100%; object-fit: cover; display: block;
-    transition: opacity .2s;
-  }
-  /* ── Table ── */
-  .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
-  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
-  th {
-    background: var(--bg3); color: var(--text2);
-    font-size: .75rem; text-transform: uppercase; letter-spacing: .05em;
-    padding: .65rem 1rem; text-align: left; font-weight: 600;
-    border-bottom: 1px solid var(--border);
-  }
-  td {
-    padding: .7rem 1rem; border-bottom: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--bg3); }
-  code {
-    font-family: 'SF Mono', 'Fira Mono', monospace;
-    font-size: .82em;
-    background: var(--bg3); border: 1px solid var(--border);
-    padding: .15em .4em; border-radius: 4px; color: var(--accent2);
-  }
-  .badge {
-    display: inline-block; padding: .2em .6em; border-radius: 6px;
-    font-size: .75rem; font-weight: 600; border: 1px solid;
-  }
-  .badge-danger { background: var(--badge-danger); color: var(--danger); border-color: var(--danger); }
-  .badge-warn { background: var(--badge-warn); color: var(--warn); border-color: var(--warn); }
-  .badge-ok { background: var(--badge-ok); color: var(--ok); border-color: var(--ok); }
-  /* ── Timeline ── */
-  .timeline { list-style: none; position: relative; padding-left: 2rem; }
-  .timeline::before {
-    content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px;
-    width: 2px; background: var(--border);
-  }
-  .timeline li {
-    position: relative; margin-bottom: 1.25rem;
-    padding: 1rem 1.2rem;
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 10px;
-  }
-  .timeline li::before {
-    content: ''; position: absolute;
-    left: -1.65rem; top: 1.2rem;
-    width: 12px; height: 12px; border-radius: 50%;
-    background: var(--accent); border: 2px solid var(--bg);
-  }
-  .timeline li.done::before { background: var(--ok); }
-  .step-title { font-weight: 700; font-size: .95rem; margin-bottom: .3rem; }
-  .step-desc { font-size: .85rem; color: var(--text2); }
-  /* ── Lightbox ── */
-  .lightbox {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,.9); z-index: 1000;
-    align-items: center; justify-content: center; padding: 2rem;
-  }
-  .lightbox.open { display: flex; }
-  .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
-  .lightbox-close {
-    position: fixed; top: 1rem; right: 1.5rem;
-    font-size: 2rem; color: #fff; cursor: pointer;
-    background: none; border: none; line-height: 1;
-  }
-  /* ── Fournisseurs ── */
-  .suppliers { display: flex; flex-direction: column; gap: .6rem; }
-  .supplier {
-    display: flex; align-items: baseline; gap: .75rem;
-    background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 8px; padding: .7rem 1rem;
-    font-size: .9rem;
-  }
-  .supplier-name { font-weight: 700; min-width: 180px; }
-  .supplier-note { color: var(--text2); }
-  /* ── Footer ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 1.5rem 2rem;
-    text-align: center;
-    font-size: .8rem; color: var(--text2);
-  }
-  /* ── Responsive ── */
-  @media (max-width: 640px) {
-    .hero { padding: 3rem 1.5rem 2rem; }
-    main { padding: 2rem 1.25rem; }
-    .spec-grid { grid-template-columns: 1fr 1fr; }
-    .gallery { grid-template-columns: 1fr 1fr; }
-    .supplier { flex-direction: column; gap: .2rem; }
-    .supplier-name { min-width: unset; }
-  }
+/* ============================================================
+   PHOENIX WEBER — feuille de style
+   Palette : anthracite / orange brûlé / blanc
+   Thèmes : [data-theme="dark"] (défaut) et [data-theme="light"]
+   ============================================================ */
+
+:root {
+  /* couleurs de marque indépendantes du thème */
+  --rust:        oklch(60% 0.155 47);   /* orange brûlé */
+  --rust-bright: oklch(67% 0.165 52);
+  --rust-deep:   oklch(50% 0.13 42);
+
+  /* échelle typo fluide */
+  --step--1: clamp(0.78rem, 0.74rem + 0.2vw, 0.86rem);
+  --step-0:  clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --step-1:  clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --step-2:  clamp(1.5rem, 1.3rem + 1vw, 2.1rem);
+  --step-3:  clamp(2rem, 1.6rem + 2vw, 3.2rem);
+  --step-4:  clamp(2.8rem, 2rem + 4vw, 5.5rem);
+
+  --font-display: 'Helvetica Neue', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --maxw: 1180px;
+  --radius: 4px;
+  --transition: 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+[data-theme="dark"] {
+  --bg:        #15171a;
+  --bg-2:      #191c20;
+  --surface:   #1f2329;
+  --surface-2: #262b32;
+  --fg:        #ecebe8;
+  --fg-soft:   #b7b9bc;
+  --muted:     #7e8488;
+  --border:    #2e343c;
+  --border-2:  #3a414a;
+  --accent:    var(--rust-bright);
+  --accent-fg: #15171a;
+  --grid-line: rgba(255,255,255,0.025);
+  --shadow:    0 18px 40px -22px rgba(0,0,0,0.8);
+  --photo-bg:  linear-gradient(135deg, #20242a, #181b1f);
+}
+
+[data-theme="light"] {
+  --bg:        #f4f2ee;
+  --bg-2:      #efece6;
+  --surface:   #ffffff;
+  --surface-2: #f7f5f1;
+  --fg:        #1b1d20;
+  --fg-soft:   #3d4045;
+  --muted:     #6e7176;
+  --border:    #ddd8d0;
+  --border-2:  #cfc9bf;
+  --accent:    var(--rust);
+  --accent-fg: #ffffff;
+  --grid-line: rgba(0,0,0,0.022);
+  --shadow:    0 18px 40px -24px rgba(40,30,20,0.35);
+  --photo-bg:  linear-gradient(135deg, #ece8e1, #f7f5f1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background var(--transition), color var(--transition);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+::selection { background: var(--accent); color: var(--accent-fg); }
+
+a { color: inherit; }
+
+.wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: clamp(20px, 5vw, 56px); }
+
+/* ---------- éléments techniques réutilisables ---------- */
+.kicker {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.kicker::before {
+  content: "";
+  width: 26px; height: 2px;
+  background: var(--accent);
+  display: inline-block;
+}
+
+h1, h2, h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.03; letter-spacing: -0.02em; }
+
+.section-title { font-size: var(--step-3); margin: 18px 0 8px; }
+.section-lede { color: var(--fg-soft); max-width: 60ch; font-size: var(--step-1); line-height: 1.5; }
+
+.pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-2);
+  color: var(--fg-soft);
+  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.pill::before { content:""; width:6px; height:6px; border-radius:50%; background: var(--muted); }
+.pill.ok      { color: oklch(72% 0.15 150); border-color: color-mix(in oklch, oklch(72% 0.15 150) 40%, transparent); }
+.pill.ok::before { background: oklch(72% 0.15 150); }
+.pill.wait    { color: oklch(75% 0.13 80); border-color: color-mix(in oklch, oklch(75% 0.13 80) 40%, transparent); }
+.pill.wait::before { background: oklch(75% 0.13 80); }
+.pill.todo    { color: var(--accent); border-color: color-mix(in oklch, var(--accent) 45%, transparent); }
+.pill.todo::before { background: var(--accent); }
+.pill.crit    { color: oklch(64% 0.2 25); border-color: color-mix(in oklch, oklch(64% 0.2 25) 45%, transparent); }
+.pill.crit::before { background: oklch(64% 0.2 25); }
+
+/* ---------- emplacement photo (le repo est vide pour l'instant) ---------- */
+.photo {
+  position: relative;
+  background: var(--photo-bg);
+  border: 1px dashed var(--border-2);
+  border-radius: var(--radius);
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.photo:hover { border-color: var(--accent); transform: translateY(-2px); }
+.photo .ph-inner { padding: 18px; }
+.photo svg { width: 30px; height: 30px; stroke: var(--muted); opacity: 0.7; margin-bottom: 8px; }
+.photo .ph-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.photo .ph-tag {
+  position: absolute; top: 10px; left: 10px; z-index: 3;
+  font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+  color: var(--fg-soft); background: color-mix(in oklch, var(--bg) 70%, transparent);
+  border: 1px solid var(--border); padding: 2px 7px; border-radius: 3px;
+  backdrop-filter: blur(4px);
+}
+/* ---------- photos réelles (repo phoenix-weber) ---------- */
+.photo.has-img { border-style: solid; border-color: var(--border); background: #0c0d0f; }
+.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.photo.has-img:hover img { transform: scale(1.03); }
+.photo img { transition: transform var(--transition); }
+.photo .ph-cap {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  padding: 22px 12px 9px; font-family: var(--font-mono); font-size: 0.64rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: #f3f1ee;
+  background: linear-gradient(transparent, rgba(8, 9, 11, 0.85));
+}
+
+/* ---------- point critique sécurité ---------- */
+.critical {
+  display: grid; grid-template-columns: 230px 1fr; gap: clamp(16px, 3vw, 30px);
+  align-items: center;
+  border: 1px solid color-mix(in oklch, oklch(64% 0.2 25) 40%, var(--border));
+  border-left: 3px solid oklch(64% 0.2 25);
+  background: color-mix(in oklch, oklch(64% 0.2 25) 7%, var(--surface));
+  border-radius: var(--radius); padding: clamp(16px, 3vw, 22px);
+  margin-bottom: clamp(28px, 4vw, 44px);
+}
+.critical .photo { aspect-ratio: 4 / 3; }
+.critical .sev { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: oklch(64% 0.2 25); display: inline-flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+.critical .sev svg { width: 16px; height: 16px; }
+.critical h4 { font-family: var(--font-body); font-weight: 800; font-size: 1.18rem; margin-bottom: 8px; }
+.critical p { color: var(--fg-soft); font-size: 0.92rem; line-height: 1.55; max-width: 62ch; }
+.critical p .ref-inline { font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent); }
+@media (max-width: 620px) { .critical { grid-template-columns: 1fr; } }
+
+/* ---------- note récupérable ---------- */
+.salvage {
+  margin-top: clamp(20px, 3vw, 28px); border: 1px solid var(--border); border-left: 3px solid oklch(72% 0.15 150);
+  background: var(--surface); border-radius: var(--radius); padding: 15px 18px;
+  font-size: 0.9rem; color: var(--fg-soft); line-height: 1.55;
+}
+.salvage b { color: oklch(72% 0.15 150); }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+header.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in oklch, var(--bg) 80%, transparent);
+  backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner { display: flex; align-items: center; gap: 24px; height: 64px; }
+.brand { display: flex; align-items: center; gap: 11px; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; font-size: 1.05rem; }
+.brand .flame { width: 26px; height: 26px; display: grid; place-items: center; }
+.brand .flame svg { width: 22px; height: 22px; }
+.nav-links { display: flex; gap: 4px; margin-left: auto; }
+.nav-links a {
+  font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase;
+  text-decoration: none; color: var(--muted); padding: 8px 12px; border-radius: var(--radius);
+  transition: color 0.2s, background 0.2s; position: relative;
+}
+.nav-links a:hover { color: var(--fg); }
+.nav-links a.active { color: var(--accent); }
+.nav-links a.active::after {
+  content:""; position:absolute; left:12px; right:12px; bottom:2px; height:2px; background: var(--accent);
+}
+.theme-toggle {
+  margin-left: 6px;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--border-2); background: var(--surface); color: var(--fg);
+  cursor: pointer; display: grid; place-items: center; transition: background 0.2s, transform 0.4s;
+}
+.theme-toggle:hover { background: var(--surface-2); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .moon { display: none; }
+[data-theme="dark"] .theme-toggle .moon { display: block; }
+[data-theme="dark"] .theme-toggle .sun { display: none; }
+
+/* ============================================================
+   ACCUEIL / HERO
+   ============================================================ */
+.hero { padding: clamp(56px, 9vw, 120px) 0 clamp(40px, 6vw, 72px); position: relative; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+.hero h1 { font-size: var(--step-4); margin: 20px 0 18px; }
+.hero h1 .out { -webkit-text-stroke: 1.5px var(--fg); color: transparent; }
+.hero .sub { font-family: var(--font-mono); color: var(--fg-soft); letter-spacing: 0.14em; text-transform: uppercase; font-size: var(--step--1); margin-bottom: 26px; }
+.hero .sub b { color: var(--accent); }
+.hero .lede { color: var(--fg-soft); font-size: var(--step-1); line-height: 1.55; max-width: 52ch; }
+
+.status-card {
+  margin-top: 30px; border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--radius); padding: 20px 22px; box-shadow: var(--shadow);
+  display: grid; gap: 14px;
+}
+.status-card .row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.status-card .lbl { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.status-card .val { font-family: var(--font-mono); font-size: 0.84rem; color: var(--fg); }
+.progress { height: 7px; background: var(--surface-2); border-radius: 999px; overflow: hidden; border: 1px solid var(--border); }
+.progress > i { display:block; height: 100%; width: 30%; background: linear-gradient(90deg, var(--rust-deep), var(--rust-bright)); border-radius: 999px; }
+
+.hero-photo-stack { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 12px; }
+.hero-photo-stack .photo:first-child { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+
+/* ============================================================
+   SECTIONS génériques
+   ============================================================ */
+section.block { padding: clamp(56px, 8vw, 104px) 0; border-top: 1px solid var(--border); position: relative; }
+.sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(28px, 4vw, 48px); }
+.sec-index { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); letter-spacing: 0.2em; }
+
+/* diagnostic : fiche technique */
+.diag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 40px); align-items: start; }
+.spec-table {
+  border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface);
+}
+.spec-table .cap {
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); padding: 14px 18px; border-bottom: 1px solid var(--border); background: var(--surface-2);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.spec-row { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 14px; padding: 13px 18px; border-bottom: 1px solid var(--border); font-size: 0.92rem; }
+.spec-row:last-child { border-bottom: 0; }
+.spec-row .k { color: var(--muted); font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; }
+.spec-row .v { color: var(--fg); }
+.spec-row .v.dim { color: var(--muted); font-style: italic; }
+
+/* pièces à remplacer */
+.parts { display: grid; gap: 12px; }
+.part {
+  border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius);
+  background: var(--surface); padding: 15px 18px; display: grid; gap: 8px;
+  transition: transform var(--transition), border-color var(--transition);
+}
+.part:hover { transform: translateX(3px); }
+.part .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.part h4 { font-family: var(--font-body); font-weight: 700; font-size: 1rem; }
+.part .ref { font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); }
+.part p { color: var(--fg-soft); font-size: 0.88rem; line-height: 1.5; }
+
+/* ============================================================
+   COMMANDES — tableau
+   ============================================================ */
+.table-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.tbl { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.tbl thead th {
+  font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--muted); text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--border); background: var(--surface-2);
+  white-space: nowrap;
+}
+.tbl tbody td { padding: 15px 18px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.tbl tbody tr:last-child td { border-bottom: 0; }
+.tbl tbody tr:hover { background: var(--surface-2); }
+.tbl .num { font-family: var(--font-mono); text-align: right; white-space: nowrap; }
+.tbl .item-name { font-weight: 600; }
+.tbl .item-sub { display:block; color: var(--muted); font-family: var(--font-mono); font-size: 0.7rem; margin-top: 2px; }
+.tbl tfoot td { padding: 16px 18px; font-family: var(--font-mono); font-size: 0.85rem; }
+.tbl tfoot .total { text-align: right; font-weight: 700; color: var(--accent); font-size: 1rem; }
+.tbl-note { color: var(--muted); font-size: 0.8rem; font-family: var(--font-mono); margin-top: 14px; }
+
+/* ============================================================
+   JOURNAL — timeline
+   ============================================================ */
+.timeline { position: relative; margin-left: 6px; padding-left: 30px; }
+.timeline::before { content:""; position:absolute; left: 0; top: 6px; bottom: 6px; width: 2px; background: var(--border-2); }
+.entry { position: relative; padding-bottom: 38px; }
+.entry:last-child { padding-bottom: 0; }
+.entry::before {
+  content:""; position:absolute; left: -34px; top: 4px; width: 11px; height: 11px; border-radius: 50%;
+  background: var(--bg); border: 2px solid var(--accent);
+}
+.entry.is-first::before { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent) 25%, transparent); }
+.entry .date { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+.entry h4 { font-family: var(--font-body); font-weight: 700; font-size: 1.1rem; margin-bottom: 6px; }
+.entry p { color: var(--fg-soft); font-size: 0.92rem; max-width: 64ch; }
+.entry .entry-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; max-width: 520px; }
+.entry .entry-photos .photo { aspect-ratio: 1; }
+
+.empty-note {
+  border: 1px dashed var(--border-2); border-radius: var(--radius); padding: 16px 18px;
+  font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin-top: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.empty-note .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ============================================================
+   RÉSULTAT — avant / après
+   ============================================================ */
+.beforeafter { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 3vw, 28px); }
+.ba-col { display: grid; gap: 12px; }
+.ba-col .photo { aspect-ratio: 4/3; }
+.ba-tag { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.ba-tag b { color: var(--accent); }
+.result-wrap .empty-note { max-width: none; }
+
+/* ---------- objectif / image cible ---------- */
+.target {
+  display: grid; grid-template-columns: 0.92fr 1.08fr; gap: clamp(18px, 3vw, 34px);
+  align-items: center; margin-bottom: clamp(22px, 4vw, 40px);
+  border: 1px solid var(--border); background: var(--surface);
+  border-radius: var(--radius); padding: clamp(16px, 2.5vw, 26px); box-shadow: var(--shadow);
+}
+.target-img {
+  position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius); overflow: hidden;
+  background: radial-gradient(115% 95% at 50% 38%, var(--surface-2), var(--bg-2));
+  border: 1px solid var(--border); display: grid; place-items: center;
+}
+.target-img img {
+  position: static; inset: auto; width: auto; height: auto;
+  max-width: 82%; max-height: 82%; object-fit: contain;
+  filter: drop-shadow(0 14px 26px rgba(0,0,0,0.45));
+}
+.target-body .kicker { margin-bottom: 14px; }
+.target-body h3 { font-size: var(--step-2); margin-bottom: 10px; }
+.target-body p { color: var(--fg-soft); max-width: 46ch; margin-bottom: 16px; }
+.target-spec { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.target-src { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.04em; color: var(--muted); }
+.target-src a { color: var(--accent); text-decoration: none; }
+.target-src a:hover { text-decoration: underline; }
+@media (max-width: 620px) { .target { grid-template-columns: 1fr; } }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
+.foot-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+.foot a.repo {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--fg-soft); text-decoration: none;
+  border: 1px solid var(--border-2); padding: 9px 14px; border-radius: var(--radius); display: inline-flex; gap: 9px; align-items: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+.foot a.repo:hover { color: var(--accent); border-color: var(--accent); }
+.foot .sig { font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); letter-spacing: 0.06em; }
+
+/* ---------- reveal au scroll ---------- */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,0.61,0.36,1); }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity:1; transform:none; transition:none; } html{scroll-behavior:auto;} }
+
+/* ---------- responsive ---------- */
+@media (max-width: 860px) {
+  .nav-links { display: none; }
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-photo-stack { order: -1; }
+  .diag-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .beforeafter { grid-template-columns: 1fr; }
+  .entry .entry-photos { grid-template-columns: 1fr 1fr; }
+  .tbl thead { display: none; }
+  .tbl tbody td { display: flex; justify-content: space-between; gap: 16px; padding: 11px 16px; }
+  .tbl tbody td::before { content: attr(data-l); font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .tbl .num { text-align: right; }
+  .tbl tbody tr { display: block; border-bottom: 4px solid var(--bg-2); }
+}
+
+/* ============================================================
+   VUE ÉCLATÉE — diagramme interactif de démontage
+   ============================================================ */
+.eclate-layout { display: grid; grid-template-columns: 1.35fr 0.65fr; gap: clamp(18px, 3vw, 36px); align-items: start; }
+@media (max-width: 860px) { .eclate-layout { grid-template-columns: 1fr; } }
+
+.eclate-stage-wrap {
+  position: relative; border: 1px solid var(--border); background:
+    radial-gradient(120% 80% at 50% 30%, var(--surface), var(--bg-2));
+  border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); overflow: hidden;
+}
+.eclate-stage-wrap::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.eclate-svg { width: 100%; height: auto; display: block; position: relative; z-index: 1; overflow: visible; }
+
+/* parts move on toggle */
+.eclate-svg .part { cursor: pointer; transition: transform 0.85s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.3s; transform: translateY(0); }
+.eclate-svg .part:focus { outline: none; }
+.eclate-svg:has(.part:hover) .part:not(:hover),
+.eclate-svg:has(.part.lit) .part:not(.lit) { opacity: 0.32; }
+.eclate-svg .part:hover .pc-glow, .eclate-svg .part.lit .pc-glow { opacity: 1; }
+.pc-glow { opacity: 0; transition: opacity 0.25s; }
+
+/* shape color coding */
+.pc-keep    { fill: color-mix(in oklch, var(--fg) 13%, var(--surface)); stroke: var(--border-2); stroke-width: 1.6; }
+.pc-replace { fill: color-mix(in oklch, var(--accent) 18%, var(--surface)); stroke: color-mix(in oklch, var(--accent) 55%, var(--border-2)); stroke-width: 1.6; }
+.pc-crit    { fill: color-mix(in oklch, oklch(64% 0.2 25) 20%, var(--surface)); stroke: oklch(64% 0.2 25); stroke-width: 1.8; }
+.pc-line    { stroke: var(--fg-soft); stroke-width: 1.4; fill: none; stroke-linecap: round; }
+.pc-line-soft { stroke: var(--muted); stroke-width: 1.2; fill: none; opacity: 0.7; }
+.pc-rust    { fill: oklch(40% 0.13 38); }
+
+/* disassembly-order badges */
+.pc-badge circle { fill: var(--bg-2); stroke: var(--border-2); stroke-width: 1.4; transition: stroke 0.25s, fill 0.25s; }
+.pc-badge text   { fill: var(--fg-soft); font-family: var(--font-mono); font-size: 15px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+.part:hover .pc-badge circle, .part.lit .pc-badge circle { fill: var(--accent); stroke: var(--accent); }
+.part:hover .pc-badge text, .part.lit .pc-badge text { fill: var(--accent-fg); }
+
+/* assembly axis (dashed guide line) */
+.eclate-axis { stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 3 7; opacity: 0; transition: opacity 0.6s; }
+.exploded .eclate-axis { opacity: 0.5; }
+
+/* tooltip */
+.eclate-tip {
+  position: absolute; z-index: 5; pointer-events: none; opacity: 0; transform: translateY(4px);
+  transition: opacity 0.18s, transform 0.18s; max-width: 270px;
+  background: color-mix(in oklch, var(--bg) 90%, transparent); backdrop-filter: blur(10px);
+  border: 1px solid var(--border-2); border-radius: var(--radius); padding: 11px 13px; box-shadow: var(--shadow);
+}
+.eclate-tip.on { opacity: 1; transform: translateY(0); }
+.eclate-tip .t-name { font-weight: 700; font-size: 0.92rem; margin-bottom: 5px; }
+.eclate-tip .t-ref { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); margin-bottom: 6px; word-break: break-word; }
+.eclate-tip .t-note { font-size: 0.78rem; color: var(--fg-soft); line-height: 1.45; }
+.eclate-tip .t-status { display: inline-block; margin-top: 8px; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border-2); color: var(--muted); }
+.eclate-tip .t-status.s-crit { color: oklch(64% 0.2 25); border-color: color-mix(in oklch, oklch(64% 0.2 25) 50%, transparent); }
+.eclate-tip .t-status.s-replace { color: var(--accent); border-color: color-mix(in oklch, var(--accent) 50%, transparent); }
+.eclate-tip .t-status.s-keep { color: oklch(72% 0.15 150); border-color: color-mix(in oklch, oklch(72% 0.15 150) 45%, transparent); }
+
+/* side panel : controls + legend + readout */
+.eclate-side { display: grid; gap: 14px; align-content: start; position: sticky; top: 84px; }
+.eclate-toggle {
+  width: 100%; font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--accent); color: var(--accent-fg); border: 0; border-radius: var(--radius);
+  padding: 14px 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+  transition: filter 0.2s, transform 0.1s;
+}
+.eclate-toggle:hover { filter: brightness(1.08); }
+.eclate-toggle:active { transform: translateY(1px); }
+.eclate-toggle svg { width: 17px; height: 17px; transition: transform 0.6s cubic-bezier(0.22,0.61,0.36,1); }
+.exploded ~ .eclate-side .eclate-toggle svg, .eclate-side .eclate-toggle.is-exploded svg { transform: rotate(180deg); }
+
+.eclate-hint { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); line-height: 1.5; text-align: center; }
+.eclate-legend { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 14px 16px; display: grid; gap: 10px; }
+.eclate-legend .lg-cap { font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.eclate-legend .lg-row { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--fg-soft); }
+.eclate-legend .sw { width: 16px; height: 16px; border-radius: 4px; flex: none; border: 1px solid var(--border-2); }
+.sw.keep    { background: color-mix(in oklch, var(--fg) 13%, var(--surface)); }
+.sw.replace { background: color-mix(in oklch, var(--accent) 18%, var(--surface)); border-color: color-mix(in oklch, var(--accent) 55%, var(--border-2)); }
+.sw.crit    { background: color-mix(in oklch, oklch(64% 0.2 25) 20%, var(--surface)); border-color: oklch(64% 0.2 25); }
+.eclate-readout { border: 1px dashed var(--border-2); border-radius: var(--radius); padding: 12px 14px; font-size: 0.82rem; color: var(--fg-soft); line-height: 1.5; }
+.eclate-readout b { color: var(--fg); }
+.eclate-readout .ro-src { display: block; margin-top: 8px; font-family: var(--font-mono); font-size: 0.68rem; color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  .eclate-svg .part, .eclate-toggle svg, .eclate-axis { transition: none; }
+}
 </style>
-</head>
+<style data-od-tweaks-bridge-style="">
+[data-od-tweaks-hidden] .tw-panel {
+  transform: translateX(calc(100% + 32px)) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+.tw-restore { display: none !important; }
+</style><script data-od-tweaks-bridge="">(function(){
+  // Synchronously hide BEFORE the artifact body parses so the panel never
+  // flashes on initial paint. The host removes the attribute via postMessage
+  // once it knows the desired state.
+  document.documentElement.setAttribute('data-od-tweaks-hidden', '');
+
+  var suppressEcho = false;
+  var observer = null;
+
+  function panelEl(){ return document.querySelector('.tw-panel'); }
+
+  function applyClassesToPanel(visible){
+    var panel = panelEl();
+    if (panel) panel.classList.toggle('tw-hidden', !visible);
+  }
+
+  function setPanelVisible(visible){
+    suppressEcho = true;
+    document.documentElement.toggleAttribute('data-od-tweaks-hidden', !visible);
+    applyClassesToPanel(visible);
+    // Clear flag after the MutationObserver has had a chance to fire for this
+    // change so we don't echo our own host-driven toggles back to the host.
+    Promise.resolve().then(function(){ suppressEcho = false; });
+  }
+
+  function postState(){
+    var panel = panelEl();
+    if (!panel) return;
+    try {
+      parent.postMessage({
+        type: 'od:tweaks-panel-state',
+        visible: !panel.classList.contains('tw-hidden'),
+      }, '*');
+    } catch (e) {}
+  }
+
+  function postAvailability(){
+    try {
+      parent.postMessage({
+        type: 'od:tweaks-available',
+        available: !!panelEl(),
+      }, '*');
+    } catch (e) {}
+  }
+
+  function attachObserver(){
+    var panel = panelEl();
+    if (!panel || observer) return;
+    observer = new MutationObserver(function(){
+      if (suppressEcho) return;
+      postState();
+    });
+    observer.observe(panel, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  function onReady(){
+    // Capture the panel authored visibility BEFORE we apply the host hidden
+    // attribute. The bridge sets data-od-tweaks-hidden synchronously in head
+    // (before the body parses), so on entry to onReady the attribute is
+    // always present even though the artifact may have authored the panel
+    // as default-visible. Reading the panel class first is the only place
+    // we can still observe the author intent. Then drive the attribute,
+    // classes, and posted state from that captured value so a default
+    // visible tw-panel reports visible:true and the toolbar toggle starts
+    // ON. Issue surfaced in PR #1643 review.
+    var panel = panelEl();
+    var initialVisible = !!panel && !panel.classList.contains('tw-hidden');
+    document.documentElement.toggleAttribute('data-od-tweaks-hidden', !initialVisible);
+    applyClassesToPanel(initialVisible);
+    attachObserver();
+    postAvailability();
+    // Post the captured initial visibility so the toolbar toggle reflects
+    // the default state on mount. Without this the toggle reads OFF while
+    // a default-visible tw-panel artifact clearly shows its panel and the
+    // user would have to click toggle-on then toggle-off to actually hide.
+    postState();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', onReady);
+  } else {
+    onReady();
+  }
+
+  window.addEventListener('message', function(ev){
+    if (!ev.data || ev.data.type !== 'od:tweaks-panel-visible') return;
+    setPanelVisible(!!ev.data.visible);
+  });
+})();</script></head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div class="logo">
-      <span class="logo-icon">🔥</span>
-      <div>
-        <div class="logo-text">Projet Phénix</div>
-        <div class="logo-sub">Weber Genesis E-310 · Restauration 2026</div>
-      </div>
+<!-- ============ NAV ============ -->
+<header class="nav" data-od-id="path-0">
+  <div class="wrap nav-inner" data-od-id="path-0-0">
+    <div class="brand">
+      <span class="flame">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2c1 3.5-1.5 4.5-1.5 7A2.5 2.5 0 0012 11.5 2.5 2.5 0 0014.5 9c0-.8-.3-1.4-.3-1.4 2.2 1.4 3.3 3.6 3.3 6.1A5.5 5.5 0 0112 19a5.5 5.5 0 01-5.5-5.5c0-4.3 3.5-6 5.5-11.5z" fill="var(--accent)"></path>
+        </svg>
+      </span>
+      Phoenix&nbsp;Weber
     </div>
-    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Clair</button>
+    <nav class="nav-links" id="navlinks" data-od-id="path-0-0-1">
+      <a href="#accueil" class="active" data-od-id="path-0-0-1-0">Accueil</a>
+      <a href="#diagnostic" data-od-id="path-0-0-1-1">Diagnostic</a>
+      <a href="#eclate" data-od-id="path-0-0-1-2">Éclaté</a>
+      <a href="#commandes" data-od-id="path-0-0-1-3">Commandes</a>
+      <a href="#journal" data-od-id="path-0-0-1-4">Journal</a>
+      <a href="#resultat" data-od-id="path-0-0-1-5">Résultat</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Basculer thème clair / sombre" title="Thème clair / sombre" data-od-id="path-0-0-2">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    </button>
   </div>
 </header>
 
-<div class="hero">
-  <div class="hero-content">
-    <div class="hero-badge">Restauration complète</div>
-    <h1>Weber Genesis <span>E-310</span></h1>
-    <p class="hero-sub">Un classique de 2007 remis à neuf — de la rouille à la flamme.</p>
-    <div class="hero-meta">
-      <div class="meta-item"><strong>Modèle</strong> 3741001</div>
-      <div class="meta-item"><strong>Série</strong> DZ 0145390</div>
-      <div class="meta-item"><strong>Millésime</strong> 2007</div>
-      <div class="meta-item"><strong>Gaz</strong> Propane (LP)</div>
-      <div class="meta-item"><strong>Brûleurs</strong> 3 × 14 000 Btu/hr</div>
+<main data-od-id="path-1">
+
+<!-- ============ ACCUEIL ============ -->
+<section id="accueil" class="hero" data-od-id="path-1-0">
+  <div class="wrap hero-grid" data-od-id="path-1-0-0">
+    <div class="hero-copy reveal">
+      <span class="kicker">Projet de restauration · 01</span>
+      <h1 data-od-id="path-1-0-0-0-1">Renaître<br><span class="out">des cendres</span></h1>
+      <p class="sub">Weber Genesis <b>E-310</b> &nbsp;·&nbsp; millésime <b>2007</b></p>
+      <p class="lede">
+        Récupéré gratuitement le 5 juin 2026 en débarrassant une maison.
+        Couvert de suie et de rouille, mais une fonte solide dessous.
+        Objectif&nbsp;: le démonter, diagnostiquer chaque pièce, le remettre à neuf —
+        et tout documenter ici.
+      </p>
+
+      <div class="status-card">
+        <div class="row">
+          <span class="lbl">Statut</span>
+          <span class="pill todo">Diagnostic terminé</span>
+        </div>
+        <div class="row">
+          <span class="lbl">Reçu le</span>
+          <span class="val">05.06.2026 — gratuit</span>
+        </div>
+        <div class="row">
+          <span class="lbl">Avancement</span>
+          <span class="val">Identifié · pièces listées</span>
+        </div>
+        <div class="progress"><i></i></div>
+      </div>
+    </div>
+
+    <div class="hero-photo-stack reveal">
+      <div class="photo has-img">
+        <span class="ph-tag">IMG_3920 · état initial</span>
+        <img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3920.jpeg" alt="Weber Genesis E-310 à la réception, état initial">
+        <span class="ph-cap">Vue d'ensemble · réception</span>
+      </div>
+      <div class="photo has-img">
+        <span class="ph-tag">IMG_3921</span>
+        <img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3921.jpeg" alt="Weber Genesis E-310, état initial — détail">
+      </div>
+      <div class="photo has-img">
+        <span class="ph-tag">IMG_3922</span>
+        <img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3922.jpeg" alt="Weber Genesis E-310, état initial — détail">
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<main>
-
-  <!-- ── État initial ── -->
-  <section class="section">
-    <h2><span class="icon">📸</span> État initial</h2>
-
-    <div class="alert alert-danger">
-      <span>⚠️</span>
-      <div><strong>Point sécurité :</strong> Le plancher du meuble (réf. <code>67756</code>) est percé de part en part par la rouille. Il maintient la bouteille de propane — <strong>ne pas rallumer avant remplacement</strong>.</div>
+<!-- ============ DIAGNOSTIC ============ -->
+<section id="diagnostic" class="block" data-od-id="path-1-1">
+  <div class="wrap" data-od-id="path-1-1-0">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Diagnostic · 02</span>
+        <h2 class="section-title" data-od-id="path-1-1-0-0-0-1">Identification &amp; pièces</h2>
+        <p class="section-lede">Modèle verrouillé à 100&nbsp;%. La cuve est saine — mais un point de sécurité bloque tout rallumage tant qu'il n'est pas traité.</p>
+      </div>
+      <span class="sec-index">02 / 05</span>
     </div>
 
-    <div class="alert alert-ok">
-      <span>✅</span>
-      <div><strong>Bonne nouvelle :</strong> La cuve (firebox) est <strong>saine</strong> — encrassée mais non percée. La restauration est validée et rentable.</div>
+    <!-- point critique sécurité -->
+    <div class="critical reveal">
+      <div class="photo has-img">
+        <span class="ph-tag">IMG_3923</span>
+        <img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3923.jpeg" alt="Plancher de meuble du Weber percé par la rouille">
+      </div>
+      <div>
+        <span class="sev">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path><path d="M12 9v4M12 17h.01"></path></svg>
+          Point critique — sécurité
+        </span>
+        <h4 data-od-id="path-1-1-0-1-1-1">Plancher de meuble percé par la rouille</h4>
+        <p>Le bac de fond / plancher du meuble <span class="ref-inline">(réf 67756)</span> est percé de part en part par la corrosion. C'est lui qui loge et maintient la bouteille de propane&nbsp;: <b>ne pas rallumer l'appareil</b> avant son remplacement. Première pièce à commander, non négociable.</p>
+      </div>
     </div>
 
-    <div class="gallery" id="gallery">
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3920.jpeg')"><img src="photos/IMG_3920.jpeg" alt="État initial 1" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3921.jpeg')"><img src="photos/IMG_3921.jpeg" alt="État initial 2" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3922.jpeg')"><img src="photos/IMG_3922.jpeg" alt="État initial 3" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3923.jpeg')"><img src="photos/IMG_3923.jpeg" alt="État initial 4" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3924.jpeg')"><img src="photos/IMG_3924.jpeg" alt="État initial 5" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3925.jpeg')"><img src="photos/IMG_3925.jpeg" alt="État initial 6" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3926.jpeg')"><img src="photos/IMG_3926.jpeg" alt="État initial 7" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3927.jpeg')"><img src="photos/IMG_3927.jpeg" alt="État initial 8" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3928.jpeg')"><img src="photos/IMG_3928.jpeg" alt="État initial 9" loading="lazy"></div>
-      <div class="gallery-item" onclick="openLightbox('photos/IMG_3929.jpeg')"><img src="photos/IMG_3929.jpeg" alt="État initial 10" loading="lazy"></div>
+    <div class="diag-grid">
+      <!-- fiche technique -->
+      <div class="spec-table reveal">
+        <div class="cap"><span>Fiche technique</span><span class="pill ok">Identifié</span></div>
+        <div class="spec-row"><span class="k">Modèle</span><span class="v">Weber Genesis E-310</span></div>
+        <div class="spec-row"><span class="k">N° de modèle</span><span class="v">3741001</span></div>
+        <div class="spec-row"><span class="k">N° de série</span><span class="v">DZ 0145390</span></div>
+        <div class="spec-row"><span class="k">Millésime</span><span class="v">2007</span></div>
+        <div class="spec-row"><span class="k">Gaz</span><span class="v">Propane (LP)</span></div>
+        <div class="spec-row"><span class="k">Commandes</span><span class="v">Latérales (tablette droite)</span></div>
+        <div class="spec-row"><span class="k">Brûleurs</span><span class="v">3 × 14 000 = 42 000 Btu/h</span></div>
+      </div>
+
+      <!-- pièces à remplacer -->
+      <div class="parts reveal">
+        <div class="part">
+          <div class="top"><h4 data-od-id="path-1-1-0-2-1-0-0-0">Bac de fond / plancher</h4><span class="pill crit">Critique</span></div>
+          <p>Percé par la rouille, maintient la bouteille de propane. Remplacement impératif avant tout allumage.</p>
+          <span class="ref">RÉF 67756 · avec visserie</span>
+        </div>
+        <div class="part">
+          <div class="top"><h4 data-od-id="path-1-1-0-2-1-1-0-0">Barres Flavorizer ×&nbsp;5</h4><span class="pill todo">À remplacer</span></div>
+          <p>Pièces d'usure, rongées après ~18 ans. Longueur 62,2&nbsp;cm spécifique aux modèles à commandes latérales.</p>
+          <span class="ref">RÉF 7539 / 7540</span>
+        </div>
+        <div class="part">
+          <div class="top"><h4 data-od-id="path-1-1-0-2-1-2-0-0">Grilles de cuisson</h4><span class="pill todo">À remplacer</span></div>
+          <p>Inox privilégié à la fonte standard pour la durabilité. Cotes à respecter à l'identique.</p>
+          <span class="ref">RÉF 7528 (inox) / 7524</span>
+        </div>
+        <div class="part">
+          <div class="top"><h4 data-od-id="path-1-1-0-2-1-3-0-0">Kit allumage</h4><span class="pill todo">À remplacer</span></div>
+          <p>Boîtier métal spécifique aux modèles 2007 — attention, différent des versions 2008+.</p>
+          <span class="ref">RÉF 67726</span>
+        </div>
+      </div>
     </div>
-  </section>
 
-  <!-- ── Identification ── -->
-  <section class="section">
-    <h2><span class="icon">🔍</span> Identification</h2>
-    <div class="spec-grid">
-      <div class="spec-card"><div class="spec-label">Gamme</div><div class="spec-value">Weber Genesis</div></div>
-      <div class="spec-card"><div class="spec-label">Modèle</div><div class="spec-value">Genesis E-310</div></div>
-      <div class="spec-card"><div class="spec-label">N° de modèle</div><div class="spec-value">3741001</div></div>
-      <div class="spec-card"><div class="spec-label">N° de série</div><div class="spec-value">DZ 0145390</div></div>
-      <div class="spec-card"><div class="spec-label">Millésime</div><div class="spec-value">2007</div></div>
-      <div class="spec-card"><div class="spec-label">Gaz</div><div class="spec-value">Propane (LP)</div></div>
-      <div class="spec-card"><div class="spec-label">Commandes</div><div class="spec-value">Latérales</div></div>
-      <div class="spec-card"><div class="spec-label">Puissance</div><div class="spec-value">42 000 Btu/hr</div></div>
+    <div class="salvage reveal">
+      <b>Récupérable —</b> la cuve (firebox) est structurellement saine malgré la calamine. Panneau de commande, corps, capot et tablettes latérales&nbsp;: nettoyage + convertisseur de rouille et peinture haute température. À vérifier au démontage&nbsp;: les 3 brûleurs, les roulettes blocables, le thermomètre et le tuyau propane.</div>
+  </div>
+</section>
+
+<!-- ============ VUE ÉCLATÉE ============ -->
+<section id="eclate" class="block" data-od-id="path-1-2">
+  <style>
+    /* positions éclatées par couche (translate en unités SVG) */
+    .eclate-stage-wrap.exploded .l1  { transform: translateY(-266px); }
+    .eclate-stage-wrap.exploded .l2  { transform: translateY(-211px); }
+    .eclate-stage-wrap.exploded .l3  { transform: translateY(-138px); }
+    .eclate-stage-wrap.exploded .l4  { transform: translateY(-70px); }
+    .eclate-stage-wrap.exploded .l5  { transform: translateY(-6px); }
+    .eclate-stage-wrap.exploded .l6  { transform: translateY(61px); }
+    .eclate-stage-wrap.exploded .l7  { transform: translate(96px, 65px); }
+    .eclate-stage-wrap.exploded .l8  { transform: translateY(144px); }
+    .eclate-stage-wrap.exploded .l9  { transform: translateY(222px); }
+    .eclate-stage-wrap.exploded .l10 { transform: translate(-96px, 210px); }
+    .eclate-stage-wrap.exploded .l11 { transform: translateY(273px); }
+    .eclate-stage-wrap.exploded .l12 { transform: translateY(289px); }
+    .eclate-svg .part:hover .pc-body, .eclate-svg .part.lit .pc-body {
+      filter: drop-shadow(0 0 5px color-mix(in oklch, var(--accent) 75%, transparent));
+    }
+  </style>
+  <div class="wrap" data-od-id="path-1-2-1">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Vue éclatée · 03</span>
+        <h2 class="section-title" data-od-id="path-1-2-1-0-0-1">Démontage &amp; remontage</h2>
+        <p class="section-lede">Vue éclatée interactive du Genesis E-310 (3741001). Survole une pièce pour sa référence Weber, son état et sa note de démontage. Les numéros donnent l'ordre de dépose, du haut vers le bas.</p>
+      </div>
+      <span class="sec-index">03 / 06</span>
     </div>
-    <p style="font-size:.85rem;color:var(--text2)">
-      ⚠️ Deux détails changent les références sur cette génération : la <strong>position des commandes</strong> (latérales → barres Flavorizer 62,2 cm, pas 44,5 cm) et le <strong>millésime exact</strong> (2007 → allumeur boîtier métal <code>67726</code>, pas le <code>67847</code> céramique de 2008-2010).
-    </p>
-  </section>
 
-  <!-- ── Pièces ── -->
-  <section class="section">
-    <h2><span class="icon">🔧</span> Liste des pièces</h2>
+    <div class="eclate-layout reveal">
+      <!-- ===== diagramme ===== -->
+      <div class="eclate-stage-wrap" id="eclate-stage" data-od-id="path-1-2-1-1-0">
+        <div class="eclate-tip" id="eclate-tip" role="status" aria-live="polite" data-od-id="path-1-2-1-1-0-0">
+          <div class="t-name" data-od-id="path-1-2-1-1-0-0-0"></div>
+          <div class="t-ref" data-od-id="path-1-2-1-1-0-0-1"></div>
+          <div class="t-note" data-od-id="path-1-2-1-1-0-0-2"></div>
+          <span class="t-status"></span>
+        </div>
 
-    <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.75rem;color:var(--text2)">À remplacer (confirmé)</h3>
-    <div class="table-wrap" style="margin-bottom:1.5rem">
-      <table>
+        <svg class="eclate-svg" viewBox="0 0 640 1060" role="img" aria-label="Vue éclatée interactive des composants du barbecue Weber Genesis E-310">
+
+          <!-- axe d'assemblage -->
+          <line class="eclate-axis" x1="320" y1="40" x2="320" y2="1024"></line>
+
+          <!-- 1 · CAPOT -->
+          <g class="part l1" tabindex="0" role="listitem" data-name="Capot émaillé + thermomètre" data-ref="Capot : pièce de série · Thermomètre RÉF 67762" data-note="Récupérable : décapage, lustrage, peinture haute température. Vérifier le thermomètre de capot." data-status="keep">
+            <path class="pc-keep pc-body" d="M182,372 C182,318 230,300 320,300 C410,300 458,318 458,372 Z"></path>
+            <rect class="pc-keep pc-body" x="300" y="287" width="40" height="14" rx="5"></rect>
+            <circle class="pc-keep pc-body" cx="398" cy="326" r="11"></circle>
+            <path class="pc-line" d="M398,320 L398,326 L403,329"></path>
+            <path class="pc-line-soft" d="M210,360 C230,335 280,322 320,322 C360,322 410,335 430,360"></path>
+            <g class="pc-badge"><circle cx="138" cy="336" r="14"></circle><text x="138" y="336">1</text></g>
+          </g>
+
+          <!-- 2 · GRILLES DE CUISSON -->
+          <g class="part l2" tabindex="0" role="listitem" data-name="Grilles de cuisson" data-ref="RÉF 7524 (fonte émaillée) · alt. 7528 (inox)" data-note="À remplacer — inox conseillé pour la durabilité. Respecter les cotes d'origine." data-status="replace">
+            <rect class="pc-replace pc-body" x="182" y="374" width="276" height="24" rx="7"></rect>
+            <path class="pc-line" d="M206,378 L206,394 M232,378 L232,394 M258,378 L258,394 M284,378 L284,394 M310,378 L310,394 M336,378 L336,394 M362,378 L362,394 M388,378 L388,394 M414,378 L414,394 M434,378 L434,394"></path>
+            <g class="pc-badge"><circle cx="138" cy="386" r="14"></circle><text x="138" y="386">2</text></g>
+          </g>
+
+          <!-- 3 · GRILLE DE MAINTIEN AU CHAUD -->
+          <g class="part l3" tabindex="0" role="listitem" data-name="Grille de maintien au chaud" data-ref="Référence à confirmer (parts finder Weber)" data-note="À vérifier / remplacer. Se clipse à l'arrière, au-dessus des grilles principales." data-status="replace">
+            <rect class="pc-replace pc-body" x="234" y="400" width="172" height="16" rx="5"></rect>
+            <path class="pc-line" d="M252,403 L252,413 M276,403 L276,413 M300,403 L300,413 M324,403 L324,413 M348,403 L348,413 M372,403 L372,413 M390,403 L390,413"></path>
+            <g class="pc-badge"><circle cx="138" cy="408" r="14"></circle><text x="138" y="408">3</text></g>
+          </g>
+
+          <!-- 4 · BARRES FLAVORIZER -->
+          <g class="part l4" tabindex="0" role="listitem" data-name="Barres Flavorizer ×5" data-ref="RÉF 7540 (émaillé) · 7539 (inox) — 62,2 cm" data-note="À remplacer — pièces d'usure. Version « commandes latérales » (longueur spécifique)." data-status="replace">
+            <path class="pc-replace pc-body" d="M196,442 L214,420 L232,442 Z M238,442 L256,420 L274,442 Z M280,442 L298,420 L316,442 Z M322,442 L340,420 L358,442 Z M364,442 L382,420 L400,442 Z M406,442 L424,420 L442,442 Z"></path>
+            <g class="pc-badge"><circle cx="138" cy="430" r="14"></circle><text x="138" y="430">4</text></g>
+          </g>
+
+          <!-- 5 · BRÛLEURS -->
+          <g class="part l5" tabindex="0" role="listitem" data-name="Brûleurs ×3 (tubes)" data-ref="RÉF 67722 · alt. 67820 (inox)" data-note="À vérifier / remplacer. Configuration commandes latérales, 3 × 14 000 Btu/h." data-status="replace">
+            <rect class="pc-replace pc-body" x="194" y="446" width="252" height="6" rx="3"></rect>
+            <rect class="pc-replace pc-body" x="194" y="454" width="252" height="6" rx="3"></rect>
+            <rect class="pc-replace pc-body" x="194" y="462" width="252" height="6" rx="3"></rect>
+            <path class="pc-line-soft" d="M210,449 L210,449 M226,449 M242,449"></path>
+            <circle class="pc-rust" cx="214" cy="449" r="1.3"></circle><circle class="pc-rust" cx="240" cy="449" r="1.3"></circle><circle class="pc-rust" cx="266" cy="449" r="1.3"></circle><circle class="pc-rust" cx="292" cy="449" r="1.3"></circle><circle class="pc-rust" cx="318" cy="449" r="1.3"></circle>
+            <g class="pc-badge"><circle cx="138" cy="456" r="14"></circle><text x="138" y="456">5</text></g>
+          </g>
+
+          <!-- 6 · CUVE / FIREBOX -->
+          <g class="part l6" tabindex="0" role="listitem" data-name="Cuve (firebox)" data-ref="Pièce de série — non remplacée" data-note="Récupérable : structurellement saine. Décalaminage complet + brossage avant remontage." data-status="keep">
+            <path class="pc-keep pc-body" d="M196,470 L444,470 L424,528 L216,528 Z"></path>
+            <path class="pc-line-soft" d="M210,478 L430,478"></path>
+            <g class="pc-badge"><circle cx="138" cy="499" r="14"></circle><text x="138" y="499">6</text></g>
+          </g>
+
+          <!-- 7 · BOÎTIER D'ALLUMAGE -->
+          <g class="part l7" tabindex="0" role="listitem" data-name="Allumage (boîtier + électrode)" data-ref="Boîtier RÉF 67726 (PAS le 67847) · électrode/module 81315" data-note="À remplacer — boîtier métal spécifique 2007. Se loge sous le panneau de commande." data-status="replace">
+            <line class="pc-line-soft" x1="444" y1="498" x2="470" y2="496"></line>
+            <rect class="pc-replace pc-body" x="470" y="480" width="50" height="32" rx="5"></rect>
+            <path class="pc-line" d="M482,496 L490,488 L487,496 L495,488"></path>
+            <circle class="pc-line" cx="508" cy="496" r="4" fill="none"></circle>
+            <g class="pc-badge"><circle cx="542" cy="496" r="14"></circle><text x="542" y="496">7</text></g>
+          </g>
+
+          <!-- 8 · PANNEAU DE COMMANDE -->
+          <g class="part l8" tabindex="0" role="listitem" data-name="Panneau de commande" data-ref="Pièce de série — non remplacée" data-note="Récupérable : nettoyage. 3 commandes + 1 brûleur latéral. Repérer le câblage d'allumage au démontage." data-status="keep">
+            <rect class="pc-keep pc-body" x="188" y="530" width="264" height="26" rx="7"></rect>
+            <circle class="pc-keep pc-body" cx="240" cy="543" r="9"></circle><path class="pc-line" d="M240,543 L240,537"></path>
+            <circle class="pc-keep pc-body" cx="300" cy="543" r="9"></circle><path class="pc-line" d="M300,543 L304,539"></path>
+            <circle class="pc-keep pc-body" cx="360" cy="543" r="9"></circle><path class="pc-line" d="M360,543 L356,539"></path>
+            <circle class="pc-keep pc-body" cx="428" cy="543" r="7"></circle>
+            <g class="pc-badge"><circle cx="138" cy="543" r="14"></circle><text x="138" y="543">8</text></g>
+          </g>
+
+          <!-- 9 · BAC DE FOND / PLANCHER (critique) -->
+          <g class="part l9" tabindex="0" role="listitem" data-name="Bac de fond / plancher" data-ref="RÉF 67756 + visserie 91357" data-note="CRITIQUE : percé par la rouille, loge la bouteille de propane. À remplacer avant tout allumage." data-status="crit">
+            <path class="pc-crit pc-body" d="M198,564 L442,564 L434,592 L206,592 Z"></path>
+            <ellipse class="pc-rust" cx="262" cy="578" rx="9" ry="4"></ellipse>
+            <ellipse class="pc-rust" cx="322" cy="582" rx="12" ry="5"></ellipse>
+            <ellipse class="pc-rust" cx="384" cy="576" rx="7" ry="3.5"></ellipse>
+            <g class="pc-badge"><circle cx="138" cy="578" r="14"></circle><text x="138" y="578">9</text></g>
+          </g>
+
+          <!-- 10 · TUYAU + DÉTENDEUR PROPANE -->
+          <g class="part l10" tabindex="0" role="listitem" data-name="Tuyau + détendeur propane" data-ref="Générique conforme (norme EN)" data-note="À remplacer — pièce de sécurité. Contrôler l'absence de fissures avant remontage." data-status="replace">
+            <rect class="pc-replace pc-body" x="150" y="560" width="36" height="58" rx="12"></rect>
+            <rect class="pc-keep pc-body" x="162" y="552" width="12" height="10" rx="2"></rect>
+            <path class="pc-line" d="M186,576 C212,576 222,586 244,586"></path>
+            <rect class="pc-replace pc-body" x="244" y="580" width="16" height="12" rx="3"></rect>
+            <g class="pc-badge"><circle cx="126" cy="588" r="14"></circle><text x="126" y="588">10</text></g>
+          </g>
+
+          <!-- 11 · CHARIOT + TABLETTES -->
+          <g class="part l11" tabindex="0" role="listitem" data-name="Chariot + tablettes latérales" data-ref="Pièce de série — non remplacée" data-note="Récupérable : traitement antirouille + peinture. Vérifier la visserie et les charnières des portes." data-status="keep">
+            <rect class="pc-keep pc-body" x="208" y="596" width="224" height="94" rx="5"></rect>
+            <path class="pc-line" d="M320,600 L320,686"></path>
+            <rect class="pc-keep pc-body" x="150" y="600" width="52" height="14" rx="3"></rect>
+            <rect class="pc-keep pc-body" x="438" y="600" width="52" height="14" rx="3"></rect>
+            <path class="pc-line" d="M232,690 L232,702 M408,690 L408,702"></path>
+            <g class="pc-badge"><circle cx="138" cy="647" r="14"></circle><text x="138" y="647">11</text></g>
+          </g>
+
+          <!-- 12 · ROUES BLOCABLES -->
+          <g class="part l12" tabindex="0" role="listitem" data-name="Roues blocables ×4" data-ref="RÉF 67088" data-note="À vérifier / remplacer si rouillées. Roues avant blocables — nettoyer les freins." data-status="replace">
+            <circle class="pc-replace pc-body" cx="258" cy="718" r="19"></circle>
+            <circle class="pc-keep pc-body" cx="258" cy="718" r="7"></circle>
+            <circle class="pc-replace pc-body" cx="382" cy="718" r="19"></circle>
+            <circle class="pc-keep pc-body" cx="382" cy="718" r="7"></circle>
+            <g class="pc-badge"><circle cx="138" cy="718" r="14"></circle><text x="138" y="718">12</text></g>
+          </g>
+
+        </svg>
+      </div>
+
+      <!-- ===== panneau latéral ===== -->
+      <div class="eclate-side">
+        <button class="eclate-toggle" id="eclate-toggle" type="button" aria-pressed="false" data-od-id="path-1-2-1-1-1-0">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6M12 15v6M5 8l-2 4 2 4M19 8l2 4-2 4"></path></svg>
+          <span id="eclate-toggle-label" data-od-id="path-1-2-1-1-1-0-1">Éclater le barbecue</span>
+        </button>
+        <p class="eclate-hint">Survole (ou touche) une pièce pour sa référence. Les numéros = ordre de démontage.</p>
+
+        <div class="eclate-legend">
+          <span class="lg-cap">Code couleur</span>
+          <div class="lg-row"><span class="sw crit"></span> Critique — sécurité</div>
+          <div class="lg-row"><span class="sw replace"></span> À remplacer (usure)</div>
+          <div class="lg-row"><span class="sw keep"></span> Récupérable — nettoyage</div>
+        </div>
+
+        <div class="eclate-readout">
+          <b>Remontage</b> : on reprend les numéros à l'envers (12 → 1). Bac de fond <b>67756</b> d'abord, puis chariot, cuve, brûleurs, Flavorizer, grilles, capot.
+          <span class="ro-src">Réfs issues des 9 manuels Weber archivés · repo phoenix-weber</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMMANDES ============ -->
+<section id="commandes" class="block" data-od-id="path-1-3">
+  <div class="wrap" data-od-id="path-1-3-0">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Commandes · 04</span>
+        <h2 class="section-title" data-od-id="path-1-3-0-0-0-1">Pièces &amp; budget</h2>
+        <p class="section-lede">Suivi des achats au fil du diagnostic. Le barbecue était gratuit — reste le coût des pièces.</p>
+      </div>
+      <span class="sec-index">04 / 06</span>
+    </div>
+
+    <div class="table-card reveal">
+      <table class="tbl">
         <thead>
           <tr>
             <th>Pièce</th>
-            <th>Réf Weber</th>
-            <th>État</th>
-            <th>Notes</th>
+            <th>Fournisseur</th>
+            <th>Statut</th>
+            <th style="text-align:right">Prix</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Plancher de meuble (bottom tray)</td>
-            <td><code>67756</code> + visserie <code>91357</code></td>
-            <td><span class="badge badge-danger">⚠️ Sécurité</span></td>
-            <td>Percé — maintient la bouteille propane</td>
+            <td data-l="Pièce"><span class="item-name">Bac de fond + visserie</span><span class="item-sub">RÉF 67756 · critique</span></td>
+            <td data-l="Fournisseur">Weber officiel FR</td>
+            <td data-l="Statut"><span class="pill todo">À commander</span></td>
+            <td class="num" data-l="Prix">—</td>
           </tr>
           <tr>
-            <td>Grilles de cuisson</td>
-            <td><code>7524</code> fonte ou <code>7528</code> inox</td>
-            <td><span class="badge badge-danger">À remplacer</span></td>
-            <td>Inox conseillé (dure plus longtemps)</td>
+            <td data-l="Pièce"><span class="item-name">Barres Flavorizer ×&nbsp;5</span><span class="item-sub">RÉF 7539 / 7540 · 62,2 cm</span></td>
+            <td data-l="Fournisseur">BBQParts.eu</td>
+            <td data-l="Statut"><span class="pill todo">À commander</span></td>
+            <td class="num" data-l="Prix">—</td>
           </tr>
           <tr>
-            <td>Barres Flavorizer 62,2 cm</td>
-            <td><code>7540</code> émaillé ou <code>7539</code> inox</td>
-            <td><span class="badge badge-danger">À remplacer</span></td>
-            <td>Version commandes <strong>latérales</strong></td>
+            <td data-l="Pièce"><span class="item-name">Grilles de cuisson inox</span><span class="item-sub">RÉF 7528 / 7524</span></td>
+            <td data-l="Fournisseur">Amazon FR</td>
+            <td data-l="Statut"><span class="pill todo">À commander</span></td>
+            <td class="num" data-l="Prix">—</td>
           </tr>
           <tr>
-            <td>Kit allumeur</td>
-            <td><code>67726</code> boîtier métal</td>
-            <td><span class="badge badge-warn">À vérifier</span></td>
-            <td>⚠️ PAS le 67847 (céramique = 2008-2010)</td>
+            <td data-l="Pièce"><span class="item-name">Kit allumage (boîtier 2007)</span><span class="item-sub">RÉF 67726</span></td>
+            <td data-l="Fournisseur">Weber officiel FR</td>
+            <td data-l="Statut"><span class="pill todo">À commander</span></td>
+            <td class="num" data-l="Prix">—</td>
           </tr>
           <tr>
-            <td>Module / électrode allumage</td>
-            <td><code>81315</code></td>
-            <td><span class="badge badge-warn">Si étincelle HS</span></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>Grille maintien au chaud</td>
-            <td>via parts finder</td>
-            <td><span class="badge badge-danger">À remplacer</span></td>
-            <td>Rouillée</td>
-          </tr>
-          <tr>
-            <td>Bac à graisse + barquettes</td>
-            <td>Catch Pan Kit</td>
-            <td><span class="badge badge-danger">À remplacer</span></td>
-            <td>Consommable</td>
+            <td data-l="Pièce"><span class="item-name">Consommables (dégraissant, convertisseur rouille, peinture haute temp.)</span><span class="item-sub">restauration</span></td>
+            <td data-l="Fournisseur">—</td>
+            <td data-l="Statut"><span class="pill wait">À chiffrer</span></td>
+            <td class="num" data-l="Prix">—</td>
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Total engagé</td>
+            <td class="total">0,00&nbsp;€</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
+    <p class="tbl-note">↳ Références verrouillées via le n° de série DZ&nbsp;0145390. Fournisseurs repérés&nbsp;: Weber officiel FR, BBQParts.eu, Amazon FR — alternatives Fiyo, Nordic BBQ Store, Esprit Barbecue, ManoMano. Les prix se rempliront commande par commande.</p>
+  </div>
+</section>
 
-    <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.75rem;color:var(--text2)">À vérifier</h3>
-    <div class="table-wrap" style="margin-bottom:1.5rem">
-      <table>
-        <thead>
-          <tr><th>Pièce</th><th>Réf Weber</th><th>Notes</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Jeu de 3 brûleurs</td>
-            <td><code>67722</code> ou <code>67820</code> inox</td>
-            <td>Side knobs 2007-2010</td>
-          </tr>
-          <tr>
-            <td>Flexible + détendeur propane</td>
-            <td>Générique conforme BE</td>
-            <td>⚠️ Sécurité — dater et remplacer</td>
-          </tr>
-          <tr>
-            <td>Roulettes bloquantes</td>
-            <td><code>67088</code></td>
-            <td>Si rouillées</td>
-          </tr>
-          <tr>
-            <td>Thermomètre de couvercle</td>
-            <td><code>67762</code></td>
-            <td>Si HS</td>
-          </tr>
-        </tbody>
-      </table>
+<!-- ============ JOURNAL ============ -->
+<section id="journal" class="block" data-od-id="path-1-4">
+  <div class="wrap" data-od-id="path-1-4-0">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Journal de travaux · 05</span>
+        <h2 class="section-title" data-od-id="path-1-4-0-0-0-1">Carnet de bord</h2>
+        <p class="section-lede">Chaque étape, datée. Du jour de la récupération à la première flamme.</p>
+      </div>
+      <span class="sec-index">05 / 06</span>
     </div>
 
-    <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.75rem;color:var(--text2)">Récupérable</h3>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Pièce</th><th>État</th><th>Action</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Cuve (firebox)</td>
-            <td><span class="badge badge-ok">✅ Saine</span></td>
-            <td>Grattage carbone + dégraissant</td>
-          </tr>
-          <tr>
-            <td>Carrosserie extérieure</td>
-            <td><span class="badge badge-warn">Rouille légère</span></td>
-            <td>Convertisseur rouille + peinture haute température</td>
-          </tr>
-          <tr>
-            <td>Capot émaillé</td>
-            <td><span class="badge badge-ok">OK</span></td>
-            <td>Nettoyage</td>
-          </tr>
-          <tr>
-            <td>Tablettes latérales</td>
-            <td><span class="badge badge-ok">OK</span></td>
-            <td>Nettoyage</td>
-          </tr>
-          <tr>
-            <td>Panneau de commandes</td>
-            <td><span class="badge badge-ok">OK</span></td>
-            <td>Nettoyage inox</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
+    <div class="timeline reveal">
+      <div class="entry is-first">
+        <div class="date">05 juin 2026 — Jour 0</div>
+        <h4 data-od-id="path-1-4-0-1-0-1">Lancement · Identification · Diagnostic</h4>
+        <p>
+          Récupéré gratuitement en débarrassant une maison. Structure du projet créée et
+          <b style="color:var(--fg)">10 photos de l'état initial</b> analysées. Modèle verrouillé à 100&nbsp;%&nbsp;:
+          Genesis E-310, n°&nbsp;3741001, série DZ&nbsp;0145390, propane (LP) 2007, commandes latérales.
+          Verdict&nbsp;: <b style="color:oklch(64% 0.2 25)">plancher du meuble (67756) percé par la rouille → ne pas rallumer</b>,
+          mais bonne nouvelle, la cuve est saine — restauration validée. Pièces à commander identifiées
+          (67756, 7528/7524, 7539/7540, 67726) et 9&nbsp;manuels techniques Weber archivés dans le repo.
+        </p>
+        <div class="entry-photos">
+          <div class="photo has-img"><span class="ph-tag">IMG_3924</span><img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3924.jpeg" alt="État initial — détail"></div>
+          <div class="photo has-img"><span class="ph-tag">IMG_3925</span><img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3925.jpeg" alt="État initial — détail"></div>
+          <div class="photo has-img"><span class="ph-tag">IMG_3926</span><img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3926.jpeg" alt="État initial — détail"></div>
+          <div class="photo has-img"><span class="ph-tag">IMG_3927</span><img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3927.jpeg" alt="État initial — détail"></div>
+          <div class="photo has-img"><span class="ph-tag">IMG_3928</span><img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3928.jpeg" alt="État initial — détail"></div>
+        </div>
+      </div>
 
-  <!-- ── Plan de restauration ── -->
-  <section class="section">
-    <h2><span class="icon">📋</span> Plan de restauration</h2>
-    <ul class="timeline">
-      <li class="done">
-        <div class="step-title">1. Identification & diagnostic</div>
-        <div class="step-desc">Modèle verrouillé à 100 % — plaque signalétique, série, millésime. Liste de pièces établie.</div>
-      </li>
-      <li>
-        <div class="step-title">2. Sécuriser</div>
-        <div class="step-desc">Ne pas rallumer tant que le plancher est percé. Remplacement <code>67756</code> en priorité.</div>
-      </li>
-      <li>
-        <div class="step-title">3. Démonter & dégraisser la cuve</div>
-        <div class="step-desc">Grattage carbone + dégraissant. Confirme l'état sain de la firebox.</div>
-      </li>
-      <li>
-        <div class="step-title">4. Remplacer plancher</div>
-        <div class="step-desc">OEM <code>67756</code> (meilleur), ou tôle inox 1,5-2 mm sur mesure + rivets (plus durable).</div>
-      </li>
-      <li>
-        <div class="step-title">5. Carrosserie</div>
-        <div class="step-desc">Convertisseur de rouille sur panneaux acier peint → peinture haute température (VHT / Dupli-Color).</div>
-      </li>
-      <li>
-        <div class="step-title">6. Intérieur — tout inox</div>
-        <div class="step-desc">Grilles <code>7528</code> inox + barres <code>7539</code> inox → pour ne jamais recommencer.</div>
-      </li>
-      <li>
-        <div class="step-title">7. Allumage</div>
-        <div class="step-desc">Kit <code>67726</code> boîtier métal + électrode <code>81315</code> si étincelle morte.</div>
-      </li>
-      <li>
-        <div class="step-title">8. Consommables & sécurité</div>
-        <div class="step-desc">Flexible + détendeur neufs conformes BE. Bac à graisse. Vérification étanchéité eau savonneuse.</div>
-      </li>
-      <li>
-        <div class="step-title">9. Prévention</div>
-        <div class="step-desc">Housse + abri pluie → la cuve dure éternellement si on évite l'humidité stagnante.</div>
-      </li>
-    </ul>
-  </section>
-
-  <!-- ── Fournisseurs ── -->
-  <section class="section">
-    <h2><span class="icon">🛒</span> Où commander (Belgique / UE)</h2>
-    <div class="suppliers">
-      <div class="supplier">
-        <span class="supplier-name">Fiyo (fiyo.be / fiyo.fr)</span>
-        <span class="supplier-note">Recherche par n° de modèle — le plus simple pour commander en ligne</span>
-      </div>
-      <div class="supplier">
-        <span class="supplier-name">Nordic BBQ Store</span>
-        <span class="supplier-note">Bien fourni Genesis série 300</span>
-      </div>
-      <div class="supplier">
-        <span class="supplier-name">Esprit Barbecue (FR)</span>
-        <span class="supplier-note">Revendeur officiel Weber + SAV</span>
-      </div>
-      <div class="supplier">
-        <span class="supplier-name">ManoMano / Amazon</span>
-        <span class="supplier-note">Génériques QuliMetal / GFTIME pour grilles & barres (moins cher)</span>
-      </div>
-      <div class="supplier">
-        <span class="supplier-name">eReplacementParts (US)</span>
-        <span class="supplier-note">Plancher 67756 si indisponible en UE</span>
+      <div class="entry">
+        <div class="date">Prochaine étape</div>
+        <h4 data-od-id="path-1-4-0-1-1-1">Commande des pièces &amp; démontage</h4>
+        <p>Commander en priorité le bac de fond 67756 (sécurité), puis Flavorizer, grilles et kit d'allumage. Démonter cuve, brûleurs, barres et grilles ; photographier chaque sous-ensemble et lancer le décapage.</p>
       </div>
     </div>
-    <p style="font-size:.8rem;color:var(--text2);margin-top:1rem">
-      💡 Chercher directement <strong>« Genesis E-310 3741001 »</strong> ou les réfs (7528, 7539, 67726, 67756…) plutôt que de passer par le formulaire Weber BE.
-      Parts finder Weber : <code>weber.com/FR/fr/help/schematics/</code> (n° série DZ0145390).
-    </p>
-  </section>
+
+    <div class="empty-note"><span class="dot"></span> Repo <b style="color:var(--accent)">Fguarien / phoenix-weber</b> complet et synchronisé — photos, diagnostic, liste de pièces et manuels. Une entrée s'ajoute à chaque session de travail.</div>
+  </div>
+</section>
+
+<!-- ============ RÉSULTAT ============ -->
+<section id="resultat" class="block result-wrap" data-od-id="path-1-5">
+  <div class="wrap" data-od-id="path-1-5-0">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Résultat final · 06</span>
+        <h2 class="section-title" data-od-id="path-1-5-0-0-0-1">Avant / Après</h2>
+        <p class="section-lede">La comparaison qui justifie tout le chantier. À venir une fois la première cuisson faite.</p>
+      </div>
+      <span class="sec-index">06 / 06</span>
+    </div>
+
+    <div class="target reveal">
+      <div class="target-img">
+        <span class="ph-tag">Objectif · catalogue</span>
+        <img loading="lazy" src="https://cdn2.bigcommerce.com/server1300/4k85vhi/templates/__custom/images/weber/genesis-es.png?t=1753201303" alt="Weber Genesis E-310 d'origine, finition cuivre, commandes latérales — la silhouette à retrouver après restauration">
+      </div>
+      <div class="target-body">
+        <span class="kicker">À quoi il ressemblera</span>
+        <h3 data-od-id="path-1-5-0-1-1-1">La silhouette d'usine à retrouver</h3>
+        <p>Photo catalogue Weber du Genesis&nbsp;E-310 sorti d'usine&nbsp;: capot fermé net, meuble deux portes, brûleur latéral à droite, commandes sur le côté. C'est la cible du chantier — capot et tablettes décapés/repolis, grilles inox neuves, plancher remplacé.</p>
+        <div class="target-spec">
+          <span class="pill">Génération 2007–2010</span>
+          <span class="pill">Commandes latérales</span>
+          <span class="pill">Finition cuivre</span>
+        </div>
+        <p class="target-src">Réf. visuelle&nbsp;: photo constructeur du même modèle (finition cuivre — la teinte définitive sera confirmée au décapage). Source <a href="https://www.thebbqdepot.com/identify-weber-grill/" target="_blank" rel="noopener" data-od-id="path-1-5-0-1-1-4-0">thebbqdepot.com</a>.</p>
+      </div>
+    </div>
+
+    <div class="beforeafter reveal">
+      <div class="ba-col">
+        <p class="ba-tag"><b>Avant</b> — 05.06.2026</p>
+        <div class="photo has-img">
+          <span class="ph-tag">IMG_3929 · avant</span>
+          <img loading="lazy" src="https://raw.githubusercontent.com/Fguarien/phoenix-weber/main/01-etat-initial/photos/IMG_3929.jpeg" alt="Weber Genesis E-310 avant restauration">
+          <span class="ph-cap">État de réception</span>
+        </div>
+      </div>
+      <div class="ba-col">
+        <p class="ba-tag"><b>Après</b> — à venir</p>
+        <div class="photo">
+          <span class="ph-tag">AFTER</span>
+          <div class="ph-inner">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2c1 3.5-1.5 4.5-1.5 7A2.5 2.5 0 0012 11.5 2.5 2.5 0 0014.5 9"></path><path d="M6.5 13.5A5.5 5.5 0 0012 19a5.5 5.5 0 005.5-5.5"></path></svg>
+            <div class="ph-label">Restauré &amp; allumé</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="empty-note"><span class="dot"></span> Résultat final à publier dès la restauration terminée — première flamme comprise.</div>
+  </div>
+</section>
 
 </main>
 
-<footer>
-  Projet Phénix — Weber Genesis E-310 · Démarré le 5 juin 2026 · Restauration en cours
+<!-- ============ FOOTER ============ -->
+<footer class="foot" data-od-id="path-2">
+  <div class="wrap foot-inner" data-od-id="path-2-0">
+    <a class="repo" href="https://github.com/Fguarien/phoenix-weber" target="_blank" rel="noopener" data-od-id="path-2-0-0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A12 12 0 000 12.6c0 5.34 3.44 9.86 8.21 11.46.6.11.82-.26.82-.58v-2.2c-3.34.74-4.04-1.45-4.04-1.45-.55-1.4-1.34-1.78-1.34-1.78-1.09-.76.08-.74.08-.74 1.2.09 1.84 1.26 1.84 1.26 1.07 1.86 2.81 1.32 3.5 1.01.11-.79.42-1.32.76-1.62-2.67-.31-5.47-1.36-5.47-6.05 0-1.34.46-2.43 1.22-3.29-.12-.31-.53-1.55.12-3.23 0 0 1-.33 3.3 1.26a11.3 11.3 0 016 0c2.29-1.59 3.29-1.26 3.29-1.26.65 1.68.24 2.92.12 3.23.77.86 1.22 1.95 1.22 3.29 0 4.7-2.81 5.74-5.49 6.04.43.38.81 1.12.81 2.26v3.35c0 .32.22.7.83.58A12 12 0 0024 12.6 12 12 0 0012 .5z"></path></svg>
+      Fguarien / phoenix-weber
+    </a>
+    <span class="sig">Phoenix Weber · journal de restauration · 2026</span>
+  </div>
 </footer>
 
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightbox-img" src="" alt="">
-</div>
-
 <script>
-(function() {
-  const saved = localStorage.getItem('theme');
-  const theme = saved || 'dark';
-  document.documentElement.setAttribute('data-theme', theme);
-  updateBtn(theme);
-
-  function updateBtn(t) {
-    const btn = document.getElementById('themeBtn');
-    if (btn) btn.textContent = t === 'dark' ? '☀️ Clair' : '🌙 Sombre';
-  }
-
-  window.toggleTheme = function() {
-    const cur = document.documentElement.getAttribute('data-theme');
-    const next = cur === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('theme', next);
-    updateBtn(next);
-  };
-
-  window.openLightbox = function(src) {
-    const lb = document.getElementById('lightbox');
-    const img = document.getElementById('lightbox-img');
-    img.src = src;
-    lb.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  };
-
-  window.closeLightbox = function() {
-    document.getElementById('lightbox').classList.remove('open');
-    document.body.style.overflow = '';
-  };
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeLightbox();
+/* ---------- thème clair / sombre + persistance ---------- */
+(function () {
+  var root = document.documentElement;
+  var KEY = 'phoenix-theme';
+  try {
+    var saved = localStorage.getItem(KEY);
+    if (saved) root.setAttribute('data-theme', saved);
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) root.setAttribute('data-theme', 'light');
+  } catch (e) {}
+  document.getElementById('themeToggle').addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem(KEY, next); } catch (e) {}
   });
+})();
+
+/* ---------- reveal au scroll ---------- */
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  els.forEach(function (e) { io.observe(e); });
+})();
+
+/* ---------- nav active selon la section visible ---------- */
+(function () {
+  var links = Array.prototype.slice.call(document.querySelectorAll('#navlinks a'));
+  var map = {};
+  links.forEach(function (l) { map[l.getAttribute('href').slice(1)] = l; });
+  var secs = links.map(function (l) { return document.getElementById(l.getAttribute('href').slice(1)); }).filter(Boolean);
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        links.forEach(function (l) { l.classList.remove('active'); });
+        if (map[en.target.id]) map[en.target.id].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach(function (s) { io.observe(s); });
+})();
+
+/* ---------- vue éclatée : toggle + tooltip + clavier ---------- */
+(function () {
+  var stage = document.getElementById('eclate-stage');
+  if (!stage) return;
+  var tip = document.getElementById('eclate-tip');
+  var btn = document.getElementById('eclate-toggle');
+  var label = document.getElementById('eclate-toggle-label');
+  var svg = stage.querySelector('.eclate-svg');
+  var parts = Array.prototype.slice.call(stage.querySelectorAll('.part'));
+  var statusText = { crit: 'Critique — sécurité', replace: 'À remplacer', keep: 'Récupérable' };
+
+  function setExploded(on) {
+    stage.classList.toggle('exploded', on);
+    btn.classList.toggle('is-exploded', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    label.textContent = on ? 'Réassembler' : 'Éclater le barbecue';
+  }
+  btn.addEventListener('click', function () { setExploded(!stage.classList.contains('exploded')); });
+
+  function showTip(part, clientX, clientY) {
+    var st = part.getAttribute('data-status') || 'keep';
+    tip.querySelector('.t-name').textContent = part.getAttribute('data-name') || '';
+    tip.querySelector('.t-ref').textContent = part.getAttribute('data-ref') || '';
+    tip.querySelector('.t-note').textContent = part.getAttribute('data-note') || '';
+    var badge = tip.querySelector('.t-status');
+    badge.textContent = statusText[st] || '';
+    badge.className = 't-status s-' + st;
+    var r = stage.getBoundingClientRect();
+    var x = clientX - r.left, y = clientY - r.top;
+    // garder l'infobulle dans le cadre
+    var tw = 250, th = 130;
+    if (x + tw + 18 > r.width) x = x - tw - 18; else x = x + 16;
+    if (x < 8) x = 8;
+    y = Math.max(8, Math.min(y + 14, r.height - th));
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+    tip.classList.add('on');
+  }
+  function hideTip() { tip.classList.remove('on'); parts.forEach(function (p) { p.classList.remove('lit'); }); }
+
+  parts.forEach(function (part) {
+    part.addEventListener('mouseenter', function (e) { showTip(part, e.clientX, e.clientY); });
+    part.addEventListener('mousemove', function (e) { showTip(part, e.clientX, e.clientY); });
+    part.addEventListener('mouseleave', hideTip);
+    // tactile : tap = sélection + auto-éclatement
+    part.addEventListener('click', function (e) {
+      if (!stage.classList.contains('exploded')) setExploded(true);
+      parts.forEach(function (p) { p.classList.remove('lit'); });
+      part.classList.add('lit');
+      var bb = part.getBoundingClientRect();
+      showTip(part, bb.left + bb.width / 2, bb.top + bb.height / 2);
+    });
+    // clavier
+    part.addEventListener('focus', function () {
+      parts.forEach(function (p) { p.classList.remove('lit'); });
+      part.classList.add('lit');
+      var bb = part.getBoundingClientRect();
+      showTip(part, bb.left + bb.width / 2, bb.top);
+    });
+    part.addEventListener('blur', hideTip);
+  });
+
+  // auto-éclatement une fois à l'entrée dans la vue (l'animation demandée)
+  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var fired = false;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting && !fired) { fired = true; setTimeout(function () { setExploded(true); }, 350); }
+      });
+    }, { threshold: 0.4 });
+    io.observe(stage);
+  }
 })();
 </script>
 
-</body>
-</html>
+
+<script data-od-snapshot-bridge="">(function(){
+  var SNAPSHOT_STYLE_PROPS = [
+    'display','position','box-sizing','width','height','min-width','max-width','min-height','max-height',
+    'margin','margin-top','margin-right','margin-bottom','margin-left',
+    'padding','padding-top','padding-right','padding-bottom','padding-left',
+    'border','border-top','border-right','border-bottom','border-left','border-radius',
+    'font','font-family','font-size','font-weight','font-style','line-height','letter-spacing',
+    'color','background-color','opacity','transform','transform-origin','overflow','overflow-x','overflow-y',
+    'white-space','text-align','vertical-align','object-fit','object-position',
+    'flex','flex-direction','flex-wrap','flex-grow','flex-shrink','flex-basis',
+    'grid','grid-template-columns','grid-template-rows','grid-column','grid-row',
+    'gap','row-gap','column-gap','align-items','align-content','align-self',
+    'justify-items','justify-content','justify-self','inset','top','right','bottom','left',
+    'z-index','box-shadow','text-shadow'
+  ];
+  function copyComputedStyle(source, target){
+    if (!source || !target || source.nodeType !== 1 || target.nodeType !== 1) return;
+    var computed = window.getComputedStyle(source);
+    var style = target.getAttribute('style') || '';
+    for (var i = 0; i < SNAPSHOT_STYLE_PROPS.length; i++){
+      var prop = SNAPSHOT_STYLE_PROPS[i];
+      var value = computed.getPropertyValue(prop);
+      if (value) style += prop + ':' + value + ';';
+    }
+    target.setAttribute('style', style);
+  }
+  function syncElementState(source, target){
+    var tag = source.tagName ? source.tagName.toLowerCase() : '';
+    if (tag === 'img' && source.currentSrc) target.setAttribute('src', source.currentSrc);
+    if (tag === 'input' || tag === 'textarea') target.setAttribute('value', source.value || '');
+    if (tag === 'canvas') {
+      try {
+        var img = document.createElement('img');
+        img.setAttribute('src', source.toDataURL('image/png'));
+        img.setAttribute('style', target.getAttribute('style') || '');
+        target.parentNode && target.parentNode.replaceChild(img, target);
+      } catch (_) {}
+    }
+  }
+  function inlineSnapshotStyles(originalRoot, cloneRoot){
+    copyComputedStyle(originalRoot, cloneRoot);
+    syncElementState(originalRoot, cloneRoot);
+    var originals = originalRoot.querySelectorAll('*');
+    var clones = cloneRoot.querySelectorAll('*');
+    var count = Math.min(originals.length, clones.length, 3500);
+    for (var i = 0; i < count; i++){
+      copyComputedStyle(originals[i], clones[i]);
+      syncElementState(originals[i], clones[i]);
+    }
+    var scripts = cloneRoot.querySelectorAll('script');
+    for (var s = scripts.length - 1; s >= 0; s--) scripts[s].remove();
+    var links = cloneRoot.querySelectorAll('link[rel~="stylesheet"], link[rel~="preload"], link[rel~="preconnect"]');
+    for (var l = links.length - 1; l >= 0; l--) links[l].remove();
+    var styles = cloneRoot.querySelectorAll('style');
+    for (var st = 0; st < styles.length; st++) {
+      styles[st].textContent = (styles[st].textContent || '')
+        .replace(/@import[^;]+;/gi, '')
+        .replace(/@font-face\s*\{[^}]*\}/gi, '');
+    }
+  }
+  function waitForImages(){
+    var imgs = Array.prototype.slice.call(document.images || []);
+    return Promise.all(imgs.map(function(img){
+      if (img.complete) return Promise.resolve();
+      return new Promise(function(resolve){
+        img.addEventListener('load', resolve, { once: true });
+        img.addEventListener('error', resolve, { once: true });
+      });
+    }));
+  }
+  function scrollOffset(){
+    var doc = document.documentElement;
+    var body = document.body;
+    return {
+      x: Math.max(window.scrollX || 0, doc ? doc.scrollLeft || 0 : 0, body ? body.scrollLeft || 0 : 0),
+      y: Math.max(window.scrollY || 0, doc ? doc.scrollTop || 0 : 0, body ? body.scrollTop || 0 : 0)
+    };
+  }
+  function escapeAttribute(value){
+    return String(value || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+  }
+  function renderSnapshot(id){
+    var w = Math.max(1, window.innerWidth || document.documentElement.clientWidth || 1);
+    var h = Math.max(1, window.innerHeight || document.documentElement.clientHeight || 1);
+    var dpr = window.devicePixelRatio || 1;
+    var docW = Math.max(w, document.documentElement.scrollWidth || 0, document.body ? document.body.scrollWidth : 0);
+    var docH = Math.max(h, document.documentElement.scrollHeight || 0, document.body ? document.body.scrollHeight : 0);
+    var clone = document.documentElement.cloneNode(true);
+    clone.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+    inlineSnapshotStyles(document.documentElement, clone);
+    var scroll = scrollOffset();
+    var cloneBody = clone.querySelector('body');
+    var rootStyle = clone.getAttribute('style') || '';
+    var bodyStyle = cloneBody ? cloneBody.getAttribute('style') || '' : '';
+    var bodyContent = cloneBody ? cloneBody.innerHTML : clone.innerHTML;
+    var wrapperStyle = rootStyle + bodyStyle +
+      'margin:0;position:relative;left:' + (-scroll.x) + 'px;top:' + (-scroll.y) + 'px;' +
+      'width:' + docW + 'px;height:' + docH + 'px;overflow:visible;';
+    var html = '<div xmlns="http://www.w3.org/1999/xhtml" style="' + escapeAttribute(wrapperStyle) + '">' + bodyContent + '</div>';
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '">' +
+      '<foreignObject x="0" y="0" width="' + docW + '" height="' + docH + '">' +
+      html +
+      '</foreignObject></svg>';
+    var img = new Image();
+    img.onload = function(){
+      try {
+        var canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.floor(w * dpr));
+        canvas.height = Math.max(1, Math.floor(h * dpr));
+        var ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('no 2d context');
+        ctx.scale(dpr, dpr);
+        ctx.drawImage(img, 0, 0, w, h);
+        window.parent.postMessage({ type: 'od:snapshot:result', id: id, dataUrl: canvas.toDataURL('image/png'), w: canvas.width, h: canvas.height }, '*');
+      } catch (err) {
+        window.parent.postMessage({ type: 'od:snapshot:result', id: id, error: String(err && err.message || err) }, '*');
+      }
+    };
+    function encodedSvgDataUrl(){
+      var encoded = encodeURIComponent(svg);
+      return 'data:image/svg+xml;charset=utf-8,' + encoded;
+    }
+    img.onerror = function(){
+      window.parent.postMessage({ type: 'od:snapshot:result', id: id, error: 'snapshot image failed' }, '*');
+    };
+    img.src = encodedSvgDataUrl();
+  }
+  window.addEventListener('message', function(ev){
+    var data = ev && ev.data;
+    if (!data || data.type !== 'od:snapshot' || !data.id) return;
+    waitForImages().then(function(){ renderSnapshot(String(data.id)); });
+  });
+})();</script><script data-od-srcdoc-transport-activation="">(function(){
+  window.addEventListener('message', function(ev){
+    var data = ev && ev.data;
+    if (!data || data.type !== 'od:srcdoc-transport-activate' || typeof data.html !== 'string') return;
+    document.open();
+    document.write(data.html);
+    document.close();
+  });
+})();</script></body></html>
