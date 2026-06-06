@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projet Phénix — Weber Genesis E-310 (2007)</title>
+<style>
+  :root[data-theme="dark"] {
+    --bg: #1a1a1a;
+    --bg2: #242424;
+    --bg3: #2e2e2e;
+    --border: #3a3a3a;
+    --text: #e8e4df;
+    --text2: #a09890;
+    --accent: #c85a1c;
+    --accent2: #e07040;
+    --ok: #4caf6e;
+    --warn: #e8a030;
+    --danger: #e04040;
+    --badge-ok: rgba(76,175,110,.15);
+    --badge-warn: rgba(232,160,48,.15);
+    --badge-danger: rgba(224,64,64,.15);
+    --shadow: 0 2px 16px rgba(0,0,0,.4);
+  }
+  :root[data-theme="light"] {
+    --bg: #f5f1ec;
+    --bg2: #fff;
+    --bg3: #ece8e2;
+    --border: #d5cfc7;
+    --text: #1e1a18;
+    --text2: #7a6e65;
+    --accent: #c85a1c;
+    --accent2: #a84510;
+    --ok: #2e7d4f;
+    --warn: #a06010;
+    --danger: #c03030;
+    --badge-ok: rgba(46,125,79,.12);
+    --badge-warn: rgba(160,96,16,.12);
+    --badge-danger: rgba(192,48,48,.12);
+    --shadow: 0 2px 16px rgba(0,0,0,.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    transition: background .2s, color .2s;
+  }
+  /* ── Header ── */
+  header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .header-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .logo { display: flex; align-items: center; gap: .75rem; }
+  .logo-icon { font-size: 1.6rem; }
+  .logo-text { font-size: 1.05rem; font-weight: 700; letter-spacing: -.02em; }
+  .logo-sub { font-size: .75rem; color: var(--text2); font-weight: 400; }
+  .theme-toggle {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px;
+    padding: .4rem .8rem; cursor: pointer; font-size: .85rem;
+    transition: background .2s;
+  }
+  .theme-toggle:hover { background: var(--border); }
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #1a0f08 0%, #2e1a10 40%, #1a1a1a 100%);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  [data-theme="light"] .hero {
+    background: linear-gradient(135deg, #3d1a08 0%, #7a3010 40%, #2c1a10 100%);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(200,90,28,.15) 0%, transparent 70%);
+  }
+  .hero-content { position: relative; max-width: 700px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block;
+    background: var(--accent); color: #fff;
+    font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    padding: .3rem .8rem; border-radius: 20px; margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800; letter-spacing: -.04em;
+    color: #fff; line-height: 1.15; margin-bottom: .8rem;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero-sub { color: rgba(255,255,255,.65); font-size: 1.05rem; margin-bottom: 2rem; }
+  .hero-meta {
+    display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap;
+  }
+  .meta-item { color: rgba(255,255,255,.55); font-size: .85rem; }
+  .meta-item strong { color: rgba(255,255,255,.9); font-weight: 600; }
+  /* ── Layout ── */
+  main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 2rem; }
+  .section { margin-bottom: 3rem; }
+  h2 {
+    font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em;
+    margin-bottom: 1.25rem;
+    display: flex; align-items: center; gap: .6rem;
+  }
+  h2::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+  h2 .icon { font-size: 1.1rem; }
+  /* ── Alert / warning ── */
+  .alert {
+    border-radius: 10px; padding: 1rem 1.2rem;
+    font-size: .9rem; border: 1px solid;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: flex-start; gap: .8rem;
+  }
+  .alert-danger {
+    background: var(--badge-danger); border-color: var(--danger); color: var(--danger);
+  }
+  .alert-ok {
+    background: var(--badge-ok); border-color: var(--ok); color: var(--ok);
+  }
+  .alert strong { font-weight: 700; }
+  /* ── Spec grid ── */
+  .spec-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem; margin-bottom: 1.5rem;
+  }
+  .spec-card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1rem 1.2rem;
+    transition: border-color .2s;
+  }
+  .spec-card:hover { border-color: var(--accent); }
+  .spec-label { font-size: .72rem; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: .3rem; }
+  .spec-value { font-size: 1rem; font-weight: 700; color: var(--text); }
+  /* ── Photo gallery ── */
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .gallery-item {
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: pointer; transition: transform .2s, box-shadow .2s;
+    background: var(--bg2);
+    aspect-ratio: 4/3;
+  }
+  .gallery-item:hover { transform: scale(1.02); box-shadow: 0 8px 32px rgba(200,90,28,.25); }
+  .gallery-item img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: opacity .2s;
+  }
+  /* ── Table ── */
+  .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th {
+    background: var(--bg3); color: var(--text2);
+    font-size: .75rem; text-transform: uppercase; letter-spacing: .05em;
+    padding: .65rem 1rem; text-align: left; font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: .7rem 1rem; border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg3); }
+  code {
+    font-family: 'SF Mono', 'Fira Mono', monospace;
+    font-size: .82em;
+    background: var(--bg3); border: 1px solid var(--border);
+    padding: .15em .4em; border-radius: 4px; color: var(--accent2);
+  }
+  .badge {
+    display: inline-block; padding: .2em .6em; border-radius: 6px;
+    font-size: .75rem; font-weight: 600; border: 1px solid;
+  }
+  .badge-danger { background: var(--badge-danger); color: var(--danger); border-color: var(--danger); }
+  .badge-warn { background: var(--badge-warn); color: var(--warn); border-color: var(--warn); }
+  .badge-ok { background: var(--badge-ok); color: var(--ok); border-color: var(--ok); }
+  /* ── Timeline ── */
+  .timeline { list-style: none; position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px;
+    width: 2px; background: var(--border);
+  }
+  .timeline li {
+    position: relative; margin-bottom: 1.25rem;
+    padding: 1rem 1.2rem;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .timeline li::before {
+    content: ''; position: absolute;
+    left: -1.65rem; top: 1.2rem;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--accent); border: 2px solid var(--bg);
+  }
+  .timeline li.done::before { background: var(--ok); }
+  .step-title { font-weight: 700; font-size: .95rem; margin-bottom: .3rem; }
+  .step-desc { font-size: .85rem; color: var(--text2); }
+  /* ── Lightbox ── */
+  .lightbox {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.9); z-index: 1000;
+    align-items: center; justify-content: center; padding: 2rem;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img { max-width: 100%; max-height: 90vh; border-radius: 8px; }
+  .lightbox-close {
+    position: fixed; top: 1rem; right: 1.5rem;
+    font-size: 2rem; color: #fff; cursor: pointer;
+    background: none; border: none; line-height: 1;
+  }
+  /* ── Fournisseurs ── */
+  .suppliers { display: flex; flex-direction: column; gap: .6rem; }
+  .supplier {
+    display: flex; align-items: baseline; gap: .75rem;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; padding: .7rem 1rem;
+    font-size: .9rem;
+  }
+  .supplier-name { font-weight: 700; min-width: 180px; }
+  .supplier-note { color: var(--text2); }
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    font-size: .8rem; color: var(--text2);
+  }
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .hero { padding: 3rem 1.5rem 2rem; }
+    main { padding: 2rem 1.25rem; }
+    .spec-grid { grid-template-columns: 1fr 1fr; }
+    .gallery { grid-template-columns: 1fr 1fr; }
+    .supplier { flex-direction: column; gap: .2rem; }
+    .supplier-name { min-width: unset; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">🔥</span>
+      <div>
+        <div class="logo-text">Projet Phénix</div>
+        <div class="logo-sub">Weber Genesis E-310 · Restauration 2026</div>
+      </div>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">☀️ Clair</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">Restauration complète</div>
+    <h1>Weber Genesis <span>E-310</span></h1>
+    <p class="hero-sub">Un classique de 2007 remis à neuf — de la rouille à la flamme.</p>
+    <div class="hero-meta">
+      <div class="meta-item"><strong>Modèle</strong> 3741001</div>
+      <div class="meta-item"><strong>Série</strong> DZ 0145390</div>
+      <div class="meta-item"><strong>Millésime</strong> 2007</div>
+      <div class="meta-item"><strong>Gaz</strong> Propane (LP)</div>
+      <div class="meta-item"><strong>Brûleurs</strong> 3 × 14 000 Btu/hr</div>
+    </div>
+  </div>
+</div>
+
+<main>
+
+  <!-- ── État initial ── -->
+  <section class="section">
+    <h2><span class="icon">📸</span> État initial</h2>
+
+    <div class="alert alert-danger">
+      <span>⚠️</span>
+      <div><strong>Point sécurité :</strong> Le plancher du meuble (réf. <code>67756</code>) est percé de part en part par la rouille. Il maintient la bouteille de propane — <strong>ne pas rallumer avant remplacement</strong>.</div>
+    </div>
+
+    <div class="alert alert-ok">
+      <span>✅</span>
+      <div><strong>Bonne nouvelle :</strong> La cuve (firebox) est <strong>saine</strong> — encrassée mais non percée. La restauration est validée et rentable.</div>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3920.jpeg')"><img src="photos/IMG_3920.jpeg" alt="État initial 1" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3921.jpeg')"><img src="photos/IMG_3921.jpeg" alt="État initial 2" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3922.jpeg')"><img src="photos/IMG_3922.jpeg" alt="État initial 3" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3923.jpeg')"><img src="photos/IMG_3923.jpeg" alt="État initial 4" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3924.jpeg')"><img src="photos/IMG_3924.jpeg" alt="État initial 5" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3925.jpeg')"><img src="photos/IMG_3925.jpeg" alt="État initial 6" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3926.jpeg')"><img src="photos/IMG_3926.jpeg" alt="État initial 7" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3927.jpeg')"><img src="photos/IMG_3927.jpeg" alt="État initial 8" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3928.jpeg')"><img src="photos/IMG_3928.jpeg" alt="État initial 9" loading="lazy"></div>
+      <div class="gallery-item" onclick="openLightbox('photos/IMG_3929.jpeg')"><img src="photos/IMG_3929.jpeg" alt="État initial 10" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- ── Identification ── -->
+  <section class="section">
+    <h2><span class="icon">🔍</span> Identification</h2>
+    <div class="spec-grid">
+      <div class="spec-card"><div class="spec-label">Gamme</div><div class="spec-value">Weber Genesis</div></div>
+      <div class="spec-card"><div class="spec-label">Modèle</div><div class="spec-value">Genesis E-310</div></div>
+      <div class="spec-card"><div class="spec-label">N° de modèle</div><div class="spec-value">3741001</div></div>
+      <div class="spec-card"><div class="spec-label">N° de série</div><div class="spec-value">DZ 0145390</div></div>
+      <div class="spec-card"><div class="spec-label">Millésime</div><div class="spec-value">2007</div></div>
+      <div class="spec-card"><div class="spec-label">Gaz</div><div class="spec-value">Propane (LP)</div></div>
+      <div class="spec-card"><div class="spec-label">Commandes</div><div class="spec-value">Latérales</div></div>
+      <div class="spec-card"><div class="spec-label">Puissance</div><div class="spec-value">42 000 Btu/hr</div></div>
+    </div>
+    <p style="font-size:.85rem;color:var(--text2)">
+      ⚠️ Deux détails changent les références sur cette génération : la <strong>position des commandes</strong> (latérales → barres Flavorizer 62,2 cm, pas 44,5 cm) et le <strong>millésime exact</strong> (2007 → allumeur boîtier métal <code>67726</code>, pas le <code>67847</code> céramique de 2008-2010).
+    </p>
+  </section>
+
+  <!-- ── Pièces ── -->
+  <section class="section">
+    <h2><span class="icon">🔧</span> Liste des pièces</h2>
+
+    <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.75rem;color:var(--text2)">À remplacer (confirmé)</h3>
+    <div class="table-wrap" style="margin-bottom:1.5rem">
+      <table>
+        <thead>
+          <tr>
+            <th>Pièce</th>
+            <th>Réf Weber</th>
+            <th>État</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Plancher de meuble (bottom tray)</td>
+            <td><code>67756</code> + visserie <code>91357</code></td>
+            <td><span class="badge badge-danger">⚠️ Sécurité</span></td>
+            <td>Percé — maintient la bouteille propane</td>
+          </tr>
+          <tr>
+            <td>Grilles de cuisson</td>
+            <td><code>7524</code> fonte ou <code>7528</code> inox</td>
+            <td><span class="badge badge-danger">À remplacer</span></td>
+            <td>Inox conseillé (dure plus longtemps)</td>
+          </tr>
+          <tr>
+            <td>Barres Flavorizer 62,2 cm</td>
+            <td><code>7540</code> émaillé ou <code>7539</code> inox</td>
+            <td><span class="badge badge-danger">À remplacer</span></td>
+            <td>Version commandes <strong>latérales</strong></td>
+          </tr>
+          <tr>
+            <td>Kit allumeur</td>
+            <td><code>67726</code> boîtier métal</td>
+            <td><span class="badge badge-warn">À vérifier</span></td>
+            <td>⚠️ PAS le 67847 (céramique = 2008-2010)</td>
+          </tr>
+          <tr>
+            <td>Module / électrode allumage</td>
+            <td><code>81315</code></td>
+            <td><span class="badge badge-warn">Si étincelle HS</span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>Grille maintien au chaud</td>
+            <td>via parts finder</td>
+            <td><span class="badge badge-danger">À remplacer</span></td>
+            <td>Rouillée</td>
+          </tr>
+          <tr>
+            <td>Bac à graisse + barquettes</td>
+            <td>Catch Pan Kit</td>
+            <td><span class="badge badge-danger">À remplacer</span></td>
+            <td>Consommable</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.75rem;color:var(--text2)">À vérifier</h3>
+    <div class="table-wrap" style="margin-bottom:1.5rem">
+      <table>
+        <thead>
+          <tr><th>Pièce</th><th>Réf Weber</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jeu de 3 brûleurs</td>
+            <td><code>67722</code> ou <code>67820</code> inox</td>
+            <td>Side knobs 2007-2010</td>
+          </tr>
+          <tr>
+            <td>Flexible + détendeur propane</td>
+            <td>Générique conforme BE</td>
+            <td>⚠️ Sécurité — dater et remplacer</td>
+          </tr>
+          <tr>
+            <td>Roulettes bloquantes</td>
+            <td><code>67088</code></td>
+            <td>Si rouillées</td>
+          </tr>
+          <tr>
+            <td>Thermomètre de couvercle</td>
+            <td><code>67762</code></td>
+            <td>Si HS</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:.95rem;font-weight:600;margin-bottom:.75rem;color:var(--text2)">Récupérable</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Pièce</th><th>État</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cuve (firebox)</td>
+            <td><span class="badge badge-ok">✅ Saine</span></td>
+            <td>Grattage carbone + dégraissant</td>
+          </tr>
+          <tr>
+            <td>Carrosserie extérieure</td>
+            <td><span class="badge badge-warn">Rouille légère</span></td>
+            <td>Convertisseur rouille + peinture haute température</td>
+          </tr>
+          <tr>
+            <td>Capot émaillé</td>
+            <td><span class="badge badge-ok">OK</span></td>
+            <td>Nettoyage</td>
+          </tr>
+          <tr>
+            <td>Tablettes latérales</td>
+            <td><span class="badge badge-ok">OK</span></td>
+            <td>Nettoyage</td>
+          </tr>
+          <tr>
+            <td>Panneau de commandes</td>
+            <td><span class="badge badge-ok">OK</span></td>
+            <td>Nettoyage inox</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── Plan de restauration ── -->
+  <section class="section">
+    <h2><span class="icon">📋</span> Plan de restauration</h2>
+    <ul class="timeline">
+      <li class="done">
+        <div class="step-title">1. Identification & diagnostic</div>
+        <div class="step-desc">Modèle verrouillé à 100 % — plaque signalétique, série, millésime. Liste de pièces établie.</div>
+      </li>
+      <li>
+        <div class="step-title">2. Sécuriser</div>
+        <div class="step-desc">Ne pas rallumer tant que le plancher est percé. Remplacement <code>67756</code> en priorité.</div>
+      </li>
+      <li>
+        <div class="step-title">3. Démonter & dégraisser la cuve</div>
+        <div class="step-desc">Grattage carbone + dégraissant. Confirme l'état sain de la firebox.</div>
+      </li>
+      <li>
+        <div class="step-title">4. Remplacer plancher</div>
+        <div class="step-desc">OEM <code>67756</code> (meilleur), ou tôle inox 1,5-2 mm sur mesure + rivets (plus durable).</div>
+      </li>
+      <li>
+        <div class="step-title">5. Carrosserie</div>
+        <div class="step-desc">Convertisseur de rouille sur panneaux acier peint → peinture haute température (VHT / Dupli-Color).</div>
+      </li>
+      <li>
+        <div class="step-title">6. Intérieur — tout inox</div>
+        <div class="step-desc">Grilles <code>7528</code> inox + barres <code>7539</code> inox → pour ne jamais recommencer.</div>
+      </li>
+      <li>
+        <div class="step-title">7. Allumage</div>
+        <div class="step-desc">Kit <code>67726</code> boîtier métal + électrode <code>81315</code> si étincelle morte.</div>
+      </li>
+      <li>
+        <div class="step-title">8. Consommables & sécurité</div>
+        <div class="step-desc">Flexible + détendeur neufs conformes BE. Bac à graisse. Vérification étanchéité eau savonneuse.</div>
+      </li>
+      <li>
+        <div class="step-title">9. Prévention</div>
+        <div class="step-desc">Housse + abri pluie → la cuve dure éternellement si on évite l'humidité stagnante.</div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ── Fournisseurs ── -->
+  <section class="section">
+    <h2><span class="icon">🛒</span> Où commander (Belgique / UE)</h2>
+    <div class="suppliers">
+      <div class="supplier">
+        <span class="supplier-name">Fiyo (fiyo.be / fiyo.fr)</span>
+        <span class="supplier-note">Recherche par n° de modèle — le plus simple pour commander en ligne</span>
+      </div>
+      <div class="supplier">
+        <span class="supplier-name">Nordic BBQ Store</span>
+        <span class="supplier-note">Bien fourni Genesis série 300</span>
+      </div>
+      <div class="supplier">
+        <span class="supplier-name">Esprit Barbecue (FR)</span>
+        <span class="supplier-note">Revendeur officiel Weber + SAV</span>
+      </div>
+      <div class="supplier">
+        <span class="supplier-name">ManoMano / Amazon</span>
+        <span class="supplier-note">Génériques QuliMetal / GFTIME pour grilles & barres (moins cher)</span>
+      </div>
+      <div class="supplier">
+        <span class="supplier-name">eReplacementParts (US)</span>
+        <span class="supplier-note">Plancher 67756 si indisponible en UE</span>
+      </div>
+    </div>
+    <p style="font-size:.8rem;color:var(--text2);margin-top:1rem">
+      💡 Chercher directement <strong>« Genesis E-310 3741001 »</strong> ou les réfs (7528, 7539, 67726, 67756…) plutôt que de passer par le formulaire Weber BE.
+      Parts finder Weber : <code>weber.com/FR/fr/help/schematics/</code> (n° série DZ0145390).
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  Projet Phénix — Weber Genesis E-310 · Démarré le 5 juin 2026 · Restauration en cours
+</footer>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+(function() {
+  const saved = localStorage.getItem('theme');
+  const theme = saved || 'dark';
+  document.documentElement.setAttribute('data-theme', theme);
+  updateBtn(theme);
+
+  function updateBtn(t) {
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = t === 'dark' ? '☀️ Clair' : '🌙 Sombre';
+  }
+
+  window.toggleTheme = function() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateBtn(next);
+  };
+
+  window.openLightbox = function(src) {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+    img.src = src;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeLightbox = function() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+})();
+</script>
+
+</body>
+</html>
