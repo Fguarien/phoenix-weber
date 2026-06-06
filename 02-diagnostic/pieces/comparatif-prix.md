@@ -1,3 +1,10 @@
+---
+title: Comparatif prix — Pièces Weber Genesis E-310 2007
+tags: [weber, phoenix-weber, pièces-détachées, comparatif-prix, bbq]
+date: 2026-06-06
+publish: false
+---
+
 # Comparatif prix — Pièces Weber Genesis E-310 2007
 
 *Recherche effectuée le 2026-06-06. Prix susceptibles d'évoluer.*
