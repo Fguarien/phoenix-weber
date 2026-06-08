@@ -15,7 +15,7 @@ tags: [weber, phoenix-weber, diagnostic, démontage]
 | Zone | État | Décision |
 |------|------|----------|
 | Plancher meuble 67756 | ⛔ Perforé 60-70% | **Remplacer** (artisan inox) |
-| Paroi gauche firebox | ⚠️ Lumière visible = trou probable | **Vérifier physiquement** — si perforé = cookbox à changer |
+| Firebox (cuve) | ✅ Confirmée non perforée — très sale | **Nettoyage profond** (Décap'Four + culottage) |
 | Brûleurs ×3 | 🟡 Inox sain, extrémités oxydées | **Remplacer préventif** (kit 67722) |
 | Grilles fonte ×3 | ⛔ Émail HS, rouille | **Remplacer** (7528 inox recommandé) |
 | Rails support brûleurs | 🟡 Galvanisation épuisée, oxydation blanche | **Remplacer** (ref 88210) |
@@ -42,15 +42,15 @@ tags: [weber, phoenix-weber, diagnostic, démontage]
 
 ### 2.2 Firebox (cuve de cuisson)
 
-**Photos : IMG_3980, IMG_3994**
+**Photos : IMG_3980, IMG_3994 — vérification physique 08/06/2026**
 
-- Fond : rouille avec zones perforées côté gauche (lumière extérieure visible)
-- Paroi gauche : possible perforation (à vérifier lumière du jour)
-- Date de fabrication confirmée : **29/11/2007** (marquage IMG_3994 : `11-29-07-1`)
-- Soudure centrale structurellement présente
+- **Structure : SAINE** — aucune perforation après inspection en plein jour ✅
+- Lumière dans IMG_3980 = reflet/résidu, pas trou traversant
+- Date de fabrication : **29/11/2007** (marquage `11-29-07-1`)
+- État : très encrassée — graisse carbonisée épaisse, rouille superficielle
 
-> ⚠️ **Point critique non évalué en J0** : si paroi gauche effectivement perforée → la firebox (cookbox) doit être remplacée.
-> Réf Weber : **Part 10 "Cookbox Genesis E/S 300 series"** — vérifier disponibilité et tarif chez Esprit Barbecue / Fiyo.
+**→ PAS de remplacement cookbox** (~€80-120 économisés)
+**→ Nettoyage profond** : protocole Décap'Four + culottage obligatoire (§4)
 
 ### 2.3 Brûleurs ×3 — réf 67722
 
