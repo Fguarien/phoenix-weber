@@ -44,6 +44,12 @@ phoenix-weber/
 | Date | Étape | Statut |
 |------|-------|--------|
 | 2026-06-05 | Lancement projet | ✅ |
+| 2026-06-07 | Premier démontage — état initial photographié (20 fichiers IMG_3976→IMG_3995) | ✅ |
+
+## Médias
+
+- **Album Immich** : `phoenix-weber` (ID `e147ce9f-4d4f-4704-8da2-16b2145552b9`) — 20 assets 2026-06-07
+- **Local** : `01-etat-initial/photos/` (ignoré git, 18 HEIC + 2 MOV)
 
 ## Liens utiles
 
