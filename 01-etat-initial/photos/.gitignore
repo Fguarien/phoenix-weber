@@ -1,0 +1,13 @@
+# Médias bruts — stockés NAS
+# /volume2/photo/obsidian/phoenix-weber/01-etat-initial/
+*.HEIC
+*.heic
+*.MOV
+*.mov
+*.jpeg
+*.jpg
+*.JPG
+*.png
+*.PNG
+*.mp4
+*.MP4
