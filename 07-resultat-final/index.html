@@ -441,6 +441,31 @@ section.block { padding: clamp(56px, 8vw, 104px) 0; border-top: 1px solid var(--
 @media (max-width: 620px) { .target { grid-template-columns: 1fr; } }
 
 /* ============================================================
+   FAQ
+   ============================================================ */
+.faq-list { display: flex; flex-direction: column; gap: 0; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:first-child { border-top: 1px solid var(--border); }
+.faq-q {
+  width: 100%; background: none; border: none; color: var(--fg); text-align: left;
+  font-family: var(--font-body); font-size: 1rem; font-weight: 700; cursor: pointer;
+  padding: 18px 0; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  transition: color 0.2s;
+}
+.faq-q:hover { color: var(--accent); }
+.faq-q svg { width: 18px; height: 18px; flex-shrink: 0; stroke: var(--muted); transition: transform 0.3s; }
+.faq-item.open .faq-q { color: var(--accent); }
+.faq-item.open .faq-q svg { transform: rotate(45deg); stroke: var(--accent); }
+.faq-a { display: none; padding: 0 0 20px; color: var(--fg-soft); font-size: 0.95rem; line-height: 1.65; max-width: 72ch; }
+.faq-item.open .faq-a { display: block; }
+.faq-a table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.88rem; }
+.faq-a th { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 7px 12px; border-bottom: 1px solid var(--border); }
+.faq-a td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.faq-a tr:last-child td { border-bottom: none; }
+.faq-a td:first-child { font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); font-weight: 700; white-space: nowrap; }
+.faq-a code { font-family: var(--font-mono); font-size: 0.84em; background: var(--surface-2); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--border); }
+
+/* ============================================================
    FOOTER
    ============================================================ */
 footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
@@ -678,6 +703,7 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
       <a href="#diagnostic" data-od-id="path-0-0-1-1">Diagnostic</a>
       <a href="#eclate" data-od-id="path-0-0-1-2">Éclaté</a>
       <a href="#commandes" data-od-id="path-0-0-1-3">Commandes</a>
+      <a href="#faq">FAQ</a>
       <a href="#journal" data-od-id="path-0-0-1-4">Journal</a>
       <a href="#resultat" data-od-id="path-0-0-1-5">Résultat</a>
       <a href="etapes.html">Étapes</a>
@@ -1225,6 +1251,94 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
     <div class="salvage reveal">
       <b>Récupérer des pièces sur un BBQ donneur (E-330 frontal par exemple) —</b>
       Si vous trouvez un Genesis 300 à commandes frontales (2011-2016) en mauvais état, les <b>grilles de cuisson 7528 sont récupérables directement</b> (même cotes). Le couvercle mérite d'être essayé mais les charnières peuvent différer. Plancher, portes et flavorizer bars = incompatibles, ne pas tenter. L'E-330 (avec brûleur latéral gauche) a un cabinet plus large — aucune pièce structurelle de carrosserie n'est transférable sur un E-310.
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="block">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="kicker">Questions fréquentes · 06</span>
+        <h2 class="section-title">FAQ — Weber Genesis</h2>
+        <p class="section-lede">Ce qu'on apprend en cherchant des pièces. Chaque question a coûté du temps — autant le documenter.</p>
+      </div>
+      <span class="sec-index">06 / 07</span>
+    </div>
+
+    <div class="faq-list reveal">
+
+      <div class="faq-item open">
+        <button class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')">
+          Que signifient les lettres et chiffres dans le nom « E-310 » ?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>Chaque caractère est un code produit :</p>
+          <table>
+            <thead><tr><th>Caractère</th><th>Signification</th><th>Variantes</th></tr></thead>
+            <tbody>
+              <tr><td>E</td><td>Trim <em>Entry</em> — finition standard</td><td><strong>S</strong> = Stainless premium · <strong>EP</strong> = ignition électronique push-button</td></tr>
+              <tr><td>3</td><td>3 brûleurs principaux</td><td><strong>2</strong> = E-210 (2 brûleurs) · <strong>4</strong> = E-410 (4 brûleurs)</td></tr>
+              <tr><td>1</td><td>Variante de base dans la gamme 3-brûleurs</td><td><strong>2</strong> = rotisserie infrarouge · <strong>3</strong> = brûleur latéral (E-330, meuble plus large)</td></tr>
+              <tr><td>0</td><td>Zéro de remplissage</td><td>Cosmétique — pas de signification fonctionnelle</td></tr>
+            </tbody>
+          </table>
+          <p>Conséquence pratique : un <strong>E-330</strong> a un meuble structurellement différent (brûleur latéral gauche, cabinet plus large). Aucune pièce de carrosserie n'est compatible avec un E-310.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')">
+          Comment lire le numéro de modèle pour dater son Genesis ?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>Le nom commercial « Genesis E-310 » ne suffit pas — il a existé de 2007 à 2016 avec des pièces incompatibles entre générations. Lire le <strong>numéro de modèle</strong> sous le BBQ ou sur l'étiquette intérieure de la cuve :</p>
+          <table>
+            <thead><tr><th>Numéro</th><th>Année</th><th>Commandes</th></tr></thead>
+            <tbody>
+              <tr><td><code>3741001</code></td><td>2007</td><td>Latérales (tablette droite)</td></tr>
+              <tr><td><code>83741001</code></td><td>2008</td><td>Latérales</td></tr>
+              <tr><td><code>93741001</code></td><td>2009</td><td>Latérales</td></tr>
+              <tr><td><code>6510001+</code></td><td>2011–2016</td><td>Frontales (panneau avant)</td></tr>
+            </tbody>
+          </table>
+          <p>La date de fabrication est aussi estampillée directement dans la cuve (ex : <code>11-29-07</code> = 29 novembre 2007).</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')">
+          Inox 304 ou pièces émaillées d'origine — quelle différence concrète ?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>L'émail porcelaine (OEM Weber) résiste très bien à la chaleur sèche mais s'écaille avec les cycles humidité/gel, la graisse acide, les chocs. Une fois écaillé, la fonte dessous rouille rapidement.</p>
+          <p>L'inox 304 ne rouille pas (couche passive d'oxyde de chrome auto-réparatrice), supporte l'humidité belge sans dégradation sur 8–15 ans. Seul inconvénient : prix +30–50 % et légèrement moins conducteur thermiquement que la fonte émaillée.</p>
+          <p><strong>Verdict pour un clima humide (Belgique) :</strong> inox 304 systématiquement sur les grilles, flavorizer bars et plancher. Pas la peine de repayer des pièces émaillées tous les 3–4 ans.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')">
+          Pourquoi ne pas commander le manifold NG (gaz naturel) moins cher sur eBay ?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>Les orifices (injecteurs) sont calibrés différemment selon le gaz :</p>
+          <table>
+            <thead><tr><th>Gaz</th><th>Réf manifold</th><th>Diamètre orifice</th></tr></thead>
+            <tbody>
+              <tr><td>Propane LP</td><td><code>67708</code></td><td>~0,46 mm</td></tr>
+              <tr><td>Gaz naturel NG</td><td><code>67610</code></td><td>~1,2 mm</td></tr>
+            </tbody>
+          </table>
+          <p>Monter un manifold NG sur un BBQ LP = orifices 2,6× trop grands → flammes géantes non contrôlables → <strong>risque incendie immédiat</strong>. Les deux pièces sont physiquement compatibles mécaniquement — rien n'empêche le montage, mais le résultat est dangereux. Toujours vérifier la mention <em>LP</em> ou <em>NG</em> dans la description.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
