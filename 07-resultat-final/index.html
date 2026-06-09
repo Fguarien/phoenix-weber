@@ -1415,15 +1415,47 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
 
       <div class="faq-item">
         <button class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')">
-          Comment nettoyer et reconditionner la cuve (firebox) sans la remplacer ?
+          Quelle est la procédure complète d'entretien — officielle Weber ?
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         </button>
         <div class="faq-a">
-          <p>Si la cuve n'est pas perforée, un nettoyage profond + culottage la remet à neuf. Protocole en 3 étapes :</p>
-          <p><strong>1 — Vérification préalable :</strong> inspecter en plein jour — tenir une lampe à l'intérieur et regarder depuis l'extérieur toutes les soudures et angles. La moindre lumière visible = perforation → remplacement obligatoire. La rouille superficielle sans trou = nettoyable.</p>
-          <p><strong>2 — Dégraissage :</strong> gratter les résidus solides (spatule plastique), appliquer Décap'Four ou Mr Muscle Grill généreusement, laisser agir 20–30 min sans sécher, frotter brosse inox circulaire, rincer abondamment, sécher immédiatement.</p>
-          <p><strong>3 — Culottage (seasoning) :</strong> fine couche d'huile végétale neutre (tournesol, pas olive) sur toutes les surfaces intérieures, chauffer à 250 °C couvercle fermé pendant 30 min. La fumée = polymérisation = couche protectrice anti-rouille. Répéter 1× par saison.</p>
-          <p>À éviter absolument : eau de Javel (attaque le métal), abrasifs (raye l'émail), ranger humide, huile d'olive (rancit).</p>
+          <p>Extrait du guide officiel Weber (180886-Cleaning-kit-1_FR) — à effectuer <strong>toutes les 10 utilisations</strong>, BBQ froid, bouteille débranchée. Durée : ~90 min.</p>
+          <table>
+            <thead><tr><th>Étape</th><th>Action</th><th>Produit</th></tr></thead>
+            <tbody>
+              <tr><td>1–4</td><td>Retirer les grilles. Brosse + spray huile anti-adhérence 30 s sur les 2 faces. Rincer, essuyer.</td><td>Huile anti-adhérence (6)</td></tr>
+              <tr><td>5–7</td><td>Retourner les grilles, répéter. Rincer à l'eau, essuyer.</td><td>—</td></tr>
+              <tr><td>8–10</td><td>Spray nettoyant sur intérieur couvercle, 30 s. Éponge humide, essuyer.</td><td>Nettoyant Q+grille (2)</td></tr>
+              <tr><td>11–13</td><td>Gratter les Flavorizer Bars encore en place. Retirer, nettoyer éponge + eau, essuyer.</td><td>Éponge (3)</td></tr>
+              <tr><td>14–17</td><td>Brosser les brûleurs. Gratter salissures et graisse intérieur cuve. Évacuer résidus dans la barquette.</td><td>Brosse brûleur (5)</td></tr>
+              <tr><td>18–22</td><td>Remettre Flavorizer Bars. Retirer barquette + bac. Mettre seau sous le BBQ. Rincer intérieur cuve, essuyer.</td><td>—</td></tr>
+              <tr><td>23–25</td><td>Spray nettoyant inox 30 s sur toutes les surfaces extérieures en acier inoxydable (A+B). Appliquer avec chiffon microfibre.</td><td>Nettoyant inox (7)</td></tr>
+              <tr><td>26–28</td><td>Remettre grilles. Spray huile anti-adhérence sur les grilles (finition).</td><td>Huile anti-adhérence (6)</td></tr>
+              <tr><td>29–30</td><td>Éliminer poussière tablettes. Spray nettoyant inox sur pièces restantes.</td><td>Nettoyant inox (7)</td></tr>
+              <tr><td>31–32</td><td>Chiffon microfibre pour finition extérieure. Eau chaude savonneuse (éponge douce) pour les autres éléments.</td><td>Chiffon microfibre (8)</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Vérification préalable cuve :</strong> inspecter en plein jour — lampe intérieure, regarder depuis l'extérieur. Lumière visible = perforation → remplacement. Rouille superficielle sans trou = nettoyable.</p>
+          <p><strong>Culottage après nettoyage agressif :</strong> fine couche d'huile végétale neutre (tournesol, pas olive) sur surfaces intérieures, 250 °C / 30 min couvercle fermé. Répéter 1× par saison.</p>
+          <p>À éviter : eau de Javel, abrasifs, ranger humide, huile d'olive.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')">
+          Nouvelles pièces inox — y a-t-il quelque chose à faire avant de les monter ?
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="faq-a">
+          <p>Oui — point souvent oublié, documenté dans le manuel d'assemblage Weber (54366) : <strong>retirer le film plastique protecteur</strong> de toutes les pièces en acier inoxydable avant installation.</p>
+          <p>Les pièces inox (tablettes, panneaux latéraux, parfois plancher) sont livrées avec un film adhésif transparent ou bleuté pour protéger la surface pendant le transport. Si oublié, le film fond au premier chauffage et laisse des résidus collants impossibles à retirer proprement.</p>
+          <p>Valable aussi pour les pièces commandées chez un artisan laser (plancher inox 304) — vérifier les deux faces avant montage.</p>
+          <p><strong>Ordre de montage intérieur cuve</strong> (étape 24 du manuel Weber) :</p>
+          <ol style="padding-left:1.4em;color:var(--fg-soft);font-size:0.92rem;line-height:2">
+            <li>Flavorizer bars (barres aromatisantes) — posées à plat dans la cuve</li>
+            <li>Grilles de cuisson — posées par-dessus, perpendiculaires</li>
+            <li>Grille de réchauffage (warming rack) — niveau supérieur</li>
+          </ol>
         </div>
       </div>
 
