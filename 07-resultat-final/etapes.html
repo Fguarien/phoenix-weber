@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="fr" data-theme="dark"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Étapes — Phoenix Weber</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<style>
+:root {
+  --rust:        oklch(60% 0.155 47);
+  --rust-bright: oklch(67% 0.165 52);
+  --rust-deep:   oklch(50% 0.13 42);
+  --step--1: clamp(0.78rem, 0.74rem + 0.2vw, 0.86rem);
+  --step-0:  clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --step-1:  clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem);
+  --step-2:  clamp(1.5rem, 1.3rem + 1vw, 2.1rem);
+  --step-3:  clamp(2rem, 1.6rem + 2vw, 3.2rem);
+  --font-display: 'Helvetica Neue', 'Arial Narrow', system-ui, sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --maxw: 1000px;
+  --radius: 4px;
+  --transition: 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+[data-theme="dark"] {
+  --bg: #15171a; --bg-2: #191c20; --surface: #1f2329; --surface-2: #262b32;
+  --fg: #ecebe8; --fg-soft: #b7b9bc; --muted: #7e8488;
+  --border: #2e343c; --border-2: #3a414a;
+  --accent: var(--rust-bright); --accent-fg: #15171a;
+  --grid-line: rgba(255,255,255,0.025);
+  --shadow: 0 18px 40px -22px rgba(0,0,0,0.8);
+}
+[data-theme="light"] {
+  --bg: #f4f2ee; --bg-2: #efece6; --surface: #ffffff; --surface-2: #f7f5f1;
+  --fg: #1b1d20; --fg-soft: #3d4045; --muted: #6e7176;
+  --border: #ddd8d0; --border-2: #cfc9bf;
+  --accent: var(--rust); --accent-fg: #ffffff;
+  --grid-line: rgba(0,0,0,0.022);
+  --shadow: 0 18px 40px -24px rgba(40,30,20,0.35);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: var(--step-0); line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 44px 44px;
+  transition: background var(--transition), color var(--transition);
+}
+::selection { background: var(--accent); color: var(--accent-fg); }
+a { color: inherit; }
+.wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: clamp(20px, 5vw, 56px); }
+
+/* NAV */
+header.nav { position: sticky; top: 0; z-index: 50; background: color-mix(in oklch, var(--bg) 80%, transparent); backdrop-filter: blur(14px) saturate(1.4); border-bottom: 1px solid var(--border); }
+.nav-inner { display: flex; align-items: center; gap: 24px; height: 64px; }
+.brand { display: flex; align-items: center; gap: 11px; font-family: var(--font-display); font-weight: 800; letter-spacing: -0.01em; font-size: 1.05rem; text-decoration: none; color: var(--fg); }
+.brand .flame { width: 26px; height: 26px; display: grid; place-items: center; }
+.brand .flame svg { width: 22px; height: 22px; }
+.nav-links { display: flex; gap: 4px; margin-left: auto; }
+.nav-links a { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; color: var(--muted); padding: 8px 12px; border-radius: var(--radius); transition: color 0.2s, background 0.2s; position: relative; }
+.nav-links a:hover { color: var(--fg); }
+.nav-links a.active { color: var(--accent); }
+.nav-links a.active::after { content:""; position:absolute; left:12px; right:12px; bottom:2px; height:2px; background: var(--accent); }
+.theme-toggle { margin-left: 6px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-2); background: var(--surface); color: var(--fg); cursor: pointer; display: grid; place-items: center; transition: background 0.2s; }
+.theme-toggle:hover { background: var(--surface-2); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .moon { display: none; }
+[data-theme="dark"] .theme-toggle .moon { display: block; }
+[data-theme="dark"] .theme-toggle .sun { display: none; }
+
+/* PAGE HEADER */
+.page-header { padding: clamp(48px, 8vw, 96px) 0 clamp(32px, 5vw, 56px); }
+.kicker { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.32em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 10px; }
+.kicker::before { content: ""; width: 26px; height: 2px; background: var(--accent); display: inline-block; }
+h1,h2,h3 { font-family: var(--font-display); font-weight: 800; line-height: 1.03; letter-spacing: -0.02em; }
+.page-title { font-size: var(--step-3); margin: 16px 0 12px; }
+.page-lede { color: var(--fg-soft); font-size: var(--step-1); line-height: 1.55; max-width: 58ch; }
+
+/* TIMELINE */
+.timeline { margin-top: clamp(32px, 5vw, 56px); display: flex; flex-direction: column; gap: 0; }
+.step { display: grid; grid-template-columns: 56px 1fr; gap: 0 clamp(16px, 3vw, 28px); position: relative; }
+.step:not(:last-child)::before { content:""; position:absolute; left: 27px; top: 54px; bottom: 0; width: 2px; background: var(--border); }
+.step-dot { display: flex; flex-direction: column; align-items: center; padding-top: 16px; }
+.dot-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border-2); background: var(--surface); display: grid; place-items: center; flex-shrink: 0; z-index: 1; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700; color: var(--muted); }
+.step.status-wip .dot-circle { border-color: var(--accent); color: var(--accent); background: color-mix(in oklch, var(--accent) 12%, var(--surface)); }
+.step.status-done .dot-circle { border-color: oklch(72% 0.15 150); color: oklch(72% 0.15 150); background: color-mix(in oklch, oklch(72% 0.15 150) 10%, var(--surface)); }
+.step-body { padding: clamp(12px, 2vw, 16px) 0 clamp(32px, 5vw, 52px); }
+.step-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.step-date { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted); }
+.step-status { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border-2); color: var(--muted); }
+.step.status-wip .step-status { color: var(--accent); border-color: color-mix(in oklch, var(--accent) 45%, transparent); background: color-mix(in oklch, var(--accent) 8%, transparent); }
+.step.status-done .step-status { color: oklch(72% 0.15 150); border-color: color-mix(in oklch, oklch(72% 0.15 150) 40%, transparent); }
+.step-title { font-size: var(--step-2); margin-bottom: 6px; }
+.step-ref { font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); margin-bottom: 14px; }
+.step-lede { color: var(--fg-soft); font-size: 0.95rem; line-height: 1.6; max-width: 68ch; margin-bottom: clamp(20px, 3vw, 28px); }
+
+/* CARDS dans les étapes */
+.card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); overflow: hidden; margin-bottom: 18px; }
+.card-head { padding: 12px 18px; background: var(--surface-2); border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: flex; justify-content: space-between; align-items: center; }
+.card-body { padding: 16px 18px; }
+table.dims { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+table.dims th { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+table.dims td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.dims tr:last-child td { border-bottom: none; }
+table.dims td:first-child { font-family: var(--font-mono); font-size: 0.82rem; color: var(--fg-soft); white-space: nowrap; }
+table.dims td strong { color: var(--accent); }
+table.dims td .imp { color: var(--fg); font-weight: 600; }
+
+/* OPTIONS COMPARAISON */
+.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.option { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 16px 18px; }
+.option.rec { border-color: color-mix(in oklch, var(--accent) 50%, var(--border)); background: color-mix(in oklch, var(--accent) 5%, var(--surface)); }
+.option-label { font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 7px; }
+.option.rec .option-label { color: var(--accent); }
+.option-title { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+.option-price { font-family: var(--font-mono); font-size: 1.1rem; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+.option-body { font-size: 0.85rem; color: var(--fg-soft); line-height: 1.55; }
+.option-body li { margin-left: 1.2em; margin-bottom: 3px; }
+
+/* NOTE / ALERTE */
+.note { border: 1px solid var(--border); border-left: 3px solid oklch(75% 0.13 80); background: var(--surface); border-radius: var(--radius); padding: 13px 16px; font-size: 0.88rem; color: var(--fg-soft); line-height: 1.55; margin-bottom: 18px; }
+.note b { color: oklch(75% 0.13 80); }
+.note.danger { border-left-color: oklch(64% 0.2 25); }
+.note.danger b { color: oklch(64% 0.2 25); }
+.note.ok { border-left-color: oklch(72% 0.15 150); }
+.note.ok b { color: oklch(72% 0.15 150); }
+.checklist { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 7px; font-size: 0.9rem; }
+.checklist li { display: flex; align-items: baseline; gap: 10px; color: var(--fg-soft); }
+.checklist li::before { content: "□"; font-family: var(--font-mono); color: var(--accent); flex-shrink: 0; }
+.checklist li.done::before { content: "✓"; color: oklch(72% 0.15 150); }
+code { font-family: var(--font-mono); font-size: 0.84em; background: var(--surface-2); padding: 1px 5px; border-radius: 3px; border: 1px solid var(--border); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+/* FOOTER */
+footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40px) 0; }
+.foot-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.repo { display: flex; align-items: center; gap: 9px; font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.06em; text-decoration: none; color: var(--muted); transition: color 0.2s; }
+.repo:hover { color: var(--fg); }
+.sig { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; color: var(--muted); }
+
+@media (max-width: 600px) {
+  .step { grid-template-columns: 36px 1fr; gap: 0 12px; }
+  .step:not(:last-child)::before { left: 17px; }
+  .options { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="index.html">
+      <span class="flame">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 2c1 3.5-1.5 4.5-1.5 7A2.5 2.5 0 0012 11.5 2.5 2.5 0 0014.5 9c0-.8-.3-1.4-.3-1.4 2.2 1.4 3.3 3.6 3.3 6.1A5.5 5.5 0 0112 19a5.5 5.5 0 01-5.5-5.5c0-4.3 3.5-6 5.5-11.5z" fill="var(--accent)"></path>
+        </svg>
+      </span>
+      Phoenix&nbsp;Weber
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="index.html#diagnostic">Diagnostic</a>
+      <a href="index.html#commandes">Commandes</a>
+      <a href="etapes.html" class="active">Étapes</a>
+      <a href="index.html#journal">Journal</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Basculer thème clair / sombre">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="page-header">
+    <div class="wrap">
+      <span class="kicker">Carnet de chantier</span>
+      <h1 class="page-title">Étapes de restauration</h1>
+      <p class="page-lede">Chaque intervention documentée — décision, options chiffrées, mesures, résultat. Dans l'ordre chronologique du chantier.</p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="timeline">
+
+      <!-- ══════════════════════════════════════════
+           ÉTAPE 01 — Plancher 67756
+           ══════════════════════════════════════════ -->
+      <div class="step status-wip reveal">
+        <div class="step-dot">
+          <div class="dot-circle">01</div>
+        </div>
+        <div class="step-body">
+          <div class="step-meta">
+            <span class="step-date">09 juin 2026</span>
+            <span class="step-status">En cours — décision pending</span>
+          </div>
+          <h2 class="step-title">Plancher de meuble</h2>
+          <p class="step-ref">Réf Weber 67756 · Cabinet Bottom · Genesis E-310 2007 (3741001)</p>
+          <p class="step-lede">Plancher percé de part en part par la corrosion — 60 à 70 % de la surface centrale traversée. Pièce critique&nbsp;: loge la bouteille de propane. Deux options&nbsp;: acheter d'occasion sur eBay ou faire fabriquer en inox 304 par un artisan local.</p>
+
+          <div class="note danger">
+            <b>Sécurité</b> — Ne pas rallumer l'appareil avant remplacement. Le plancher effondré peut laisser tomber la bouteille sous le BBQ allumé.
+          </div>
+
+          <!-- OPTIONS -->
+          <div class="options">
+            <div class="option">
+              <div class="option-label">
+                <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                Option A
+              </div>
+              <div class="option-title">eBay occasion</div>
+              <div class="option-price">€50–90</div>
+              <div class="option-body">
+                <ul>
+                  <li>Recherche&nbsp;: <em>Weber 67756</em> ou <em>Genesis 310 cabinet bottom</em></li>
+                  <li>Pièce OEM originale, cotes garanties</li>
+                  <li>État inconnu — risque de rouille cachée</li>
+                  <li>Délai&nbsp;: 2–3 semaines (vendeurs US majoritaires)</li>
+                  <li>Port international : ~€30–50 à ajouter</li>
+                </ul>
+              </div>
+            </div>
+            <div class="option rec">
+              <div class="option-label">
+                <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="currentColor"/></svg>
+                Option B — recommandée
+              </div>
+              <div class="option-title">Artisan inox local</div>
+              <div class="option-price">€60–100</div>
+              <div class="option-body">
+                <ul>
+                  <li>Inox 304, 1,5–2 mm épaisseur</li>
+                  <li>Durée de vie 3–5× supérieure à l'OEM acier</li>
+                  <li>Délai&nbsp;: ~1 semaine</li>
+                  <li>Nécessite relevé de cotes avant dépose</li>
+                  <li>Coût dépend du nombre de plis et découpes</li>
+                </ul>
+              </div>
+            </div>
+            <div class="option">
+              <div class="option-label">
+                <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                Option C
+              </div>
+              <div class="option-title">Import neuf US</div>
+              <div class="option-price">€160–200</div>
+              <div class="option-body">
+                <ul>
+                  <li>appliancefactoryparts.com (~$120 + port)</li>
+                  <li>Pièce neuve OEM</li>
+                  <li>Acier standard — reprendra la rouille</li>
+                  <li>Délai&nbsp;: 3–4 semaines</li>
+                  <li>Prix excessif vu la qualité matière</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- DIMENSIONS ARTISAN -->
+          <div class="card">
+            <div class="card-head">
+              Cotes à donner à l'artisan
+              <span style="color:var(--accent);font-size:0.7rem">Inox 304 · pliage 4 côtés</span>
+            </div>
+            <div class="card-body">
+              <table class="dims">
+                <thead>
+                  <tr>
+                    <th>Dimension</th>
+                    <th>Valeur</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Longueur extérieure</td>
+                    <td><strong>66,7 cm</strong> <span style="color:var(--muted);font-size:0.8em">(26,25")</span></td>
+                    <td>Cote nominale Weber — à confirmer sur pièce déposée</td>
+                  </tr>
+                  <tr>
+                    <td>Largeur extérieure</td>
+                    <td><strong>50,8 cm</strong> <span style="color:var(--muted);font-size:0.8em">(20")</span></td>
+                    <td>Cote nominale Weber</td>
+                  </tr>
+                  <tr>
+                    <td>Hauteur des rebords</td>
+                    <td><strong>3,8 cm</strong> <span style="color:var(--muted);font-size:0.8em">(1,5")</span></td>
+                    <td>Pliage sur 4 côtés formant bac</td>
+                  </tr>
+                  <tr>
+                    <td>Fond intérieur résultant</td>
+                    <td><strong>59,1 × 43,2 cm</strong></td>
+                    <td>Calculé — 66,7−2×3,8 / 50,8−2×3,8</td>
+                  </tr>
+                  <tr>
+                    <td>Blanc de découpe</td>
+                    <td><strong>66,7 × 50,8 cm</strong></td>
+                    <td>Feuille plate avant pliage</td>
+                  </tr>
+                  <tr>
+                    <td>Épaisseur matière</td>
+                    <td><span class="imp">1,5 mm minimum</span> — 2 mm idéal</td>
+                    <td>Inox 304 — pas 430 (moins résistant)</td>
+                  </tr>
+                  <tr>
+                    <td>Traitement des coins</td>
+                    <td>Onglets à 45° soudés TIG</td>
+                    <td>Ou encoches avec joues repliées — au choix artisan</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- À MESURER AVANT DÉPOSE -->
+          <div class="card">
+            <div class="card-head">À mesurer avant de déposer la pièce</div>
+            <div class="card-body">
+              <ul class="checklist">
+                <li>Pattern de visserie — nombre de trous, diamètre (probablement M6), position XY depuis coin avant-gauche</li>
+                <li>Présence et position des encoches pour pattes du châssis (U découpés dans les rebords)</li>
+                <li>Trous de drainage éventuels dans le fond (diamètre, position)</li>
+                <li>Confirmer que les rebords sont sur les 4 côtés ou seulement 3 (côté ouvert vers l'avant ?)</li>
+                <li>Vérifier si les rebords sont droits ou avec retour à 90° (lèvre de renfort)</li>
+                <li>Relever les dimensions réelles au pied à coulisse — les cotes Weber peuvent varier de ±2 mm</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="note">
+            <b>Décision</b> — Comparer le prix artisan local obtenu avec les annonces eBay actives pour <code>Weber 67756</code>. Si artisan &lt; €100 → artisan (inox 304 dure bien plus longtemps). Si annonce eBay BE/FR &lt; €50 pièce seule → eBay acceptable. Import US neuf : à éviter.
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           ÉTAPE 02 — Manifold LP (à venir)
+           ══════════════════════════════════════════ -->
+      <div class="step reveal">
+        <div class="step-dot">
+          <div class="dot-circle">02</div>
+        </div>
+        <div class="step-body">
+          <div class="step-meta">
+            <span class="step-date">—</span>
+            <span class="step-status">Pending</span>
+          </div>
+          <h2 class="step-title">Manifold propane</h2>
+          <p class="step-ref">Réf Weber 67708 · Mfld Gen 310 LP USA · Genesis E-310 2007 (3741001)</p>
+          <p class="step-lede">Manifold complètement rouillé aux extrémités — vis à couper pour la dépose. Remplacement obligatoire. Pièce LP propane uniquement&nbsp;: ne pas substituer par le <code>67610</code> (gaz naturel NG, orifices incompatibles).</p>
+          <div class="note">
+            <b>Source EU à trouver</b> — appliancefactoryparts.com (US, $185.98). Chercher aussi eBay occasion <em>"Weber Genesis 310 LP manifold side controls 2008-2010"</em> — compatible avec modification mineure (couper les wings).
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════
+           ÉTAPE 03 — Nettoyage firebox (à venir)
+           ══════════════════════════════════════════ -->
+      <div class="step reveal">
+        <div class="step-dot">
+          <div class="dot-circle">03</div>
+        </div>
+        <div class="step-body">
+          <div class="step-meta">
+            <span class="step-date">—</span>
+            <span class="step-status">Pending</span>
+          </div>
+          <h2 class="step-title">Nettoyage firebox</h2>
+          <p class="step-ref">Cuve confirmée non perforée · Date fabrication 29/11/2007</p>
+          <p class="step-lede">Très encrassée — graisse carbonisée épaisse, rouille superficielle. Protocole&nbsp;: Décap'Four + brosse inox + culottage huile végétale 250&nbsp;°C / 30&nbsp;min. Aucun remplacement nécessaire.</p>
+        </div>
+      </div>
+
+    </div><!-- /timeline -->
+  </div><!-- /wrap -->
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <a class="repo" href="https://github.com/Fguarien/phoenix-weber" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A12 12 0 000 12.6c0 5.34 3.44 9.86 8.21 11.46.6.11.82-.26.82-.58v-2.2c-3.34.74-4.04-1.45-4.04-1.45-.55-1.4-1.34-1.78-1.34-1.78-1.09-.76.08-.74.08-.74 1.2.09 1.84 1.26 1.84 1.26 1.07 1.86 2.81 1.32 3.5 1.01.11-.79.42-1.32.76-1.62-2.67-.31-5.47-1.36-5.47-6.05 0-1.34.46-2.43 1.22-3.29-.12-.31-.53-1.55.12-3.23 0 0 1-.33 3.3 1.26a11.3 11.3 0 016 0c2.29-1.59 3.29-1.26 3.29-1.26.65 1.68.24 2.92.12 3.23.77.86 1.22 1.95 1.22 3.29 0 4.7-2.81 5.74-5.49 6.04.43.38.81 1.12.81 2.26v3.35c0 .32.22.7.83.58A12 12 0 0024 12.6 12 12 0 0012 .5z"></path></svg>
+      Fguarien / phoenix-weber
+    </a>
+    <span class="sig">Phoenix Weber · journal de restauration · 2026</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var KEY = 'phoenix-theme';
+  try {
+    var saved = localStorage.getItem(KEY);
+    if (saved) root.setAttribute('data-theme', saved);
+    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) root.setAttribute('data-theme', 'light');
+  } catch (e) {}
+  document.getElementById('themeToggle').addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem(KEY, next); } catch (e) {}
+  });
+})();
+(function () {
+  var els = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
+  els.forEach(function (e) { io.observe(e); });
+})();
+</script>
+</body></html>
