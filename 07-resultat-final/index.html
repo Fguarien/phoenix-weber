@@ -326,6 +326,8 @@ section.block { padding: clamp(56px, 8vw, 104px) 0; border-top: 1px solid var(--
 .sec-index { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); letter-spacing: 0.2em; }
 
 /* diagnostic : fiche technique */
+.ref-photos { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 3vw, 28px); }
+.ref-photos .photo { aspect-ratio: 16 / 9; }
 .diag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 4vw, 40px); align-items: start; }
 .spec-table {
   border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface);
@@ -1101,6 +1103,20 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
         <p class="section-lede">Avant de commander la moindre pièce — savoir exactement quel Genesis vous avez. Deux générations, deux jeux de références, zéro interchangeabilité entre elles.</p>
       </div>
       <span class="sec-index">05 / 07</span>
+    </div>
+
+    <!-- Photos de référence du modèle -->
+    <div class="ref-photos reveal" style="margin-bottom:2rem">
+      <div class="photo has-img">
+        <span class="ph-tag">Vue éclatée · Genesis 300 2007</span>
+        <img loading="lazy" src="https://www.grillparts.com/images/brand-landing-headers/weber/weber-genesis-300-2007-gas-grill-parts.jpg" alt="Vue éclatée Weber Genesis 300 séries 2007 — pièces numérotées">
+        <span class="ph-cap">Schéma de référence — Genesis 300 séries 2007</span>
+      </div>
+      <div class="photo has-img">
+        <span class="ph-tag">Commandes latérales · caractéristique 2007-2010</span>
+        <img loading="lazy" src="https://www.grillparts.com/images/brand-landing-headers/weber/side-mount-controls-weber-grill-parts.jpg" alt="Commandes latérales Weber — tablette droite, caractéristique des modèles 2007-2010">
+        <span class="ph-cap">Commandes sur tablette droite — discriminant générationnel clé</span>
+      </div>
     </div>
 
     <!-- Identifier son modèle -->
