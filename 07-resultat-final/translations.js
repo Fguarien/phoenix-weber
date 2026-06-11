@@ -139,6 +139,7 @@ const PHOENIX_T = {
     'foot.sig': 'Phoenix Weber · journal de restauration · 2026',
 
     /* etapes.html */
+    'etapes.page.title':   'Étapes — Phoenix Weber',
     'etapes.kicker':       'Carnet de chantier',
     'etapes.h1':           'Étapes de restauration',
     'etapes.lede':         'Chaque intervention documentée — décision, options chiffrées, mesures, résultat. Dans l\'ordre chronologique du chantier.',
@@ -286,6 +287,7 @@ const PHOENIX_T = {
 
     'foot.sig': 'Phoenix Weber · restoration journal · 2026',
 
+    'etapes.page.title':   'Steps — Phoenix Weber',
     'etapes.kicker':       'Workshop logbook',
     'etapes.h1':           'Restoration Steps',
     'etapes.lede':         'Each intervention documented — decision, priced options, measurements, result. In chronological order of the project.',
@@ -432,6 +434,7 @@ const PHOENIX_T = {
 
     'foot.sig': 'Phoenix Weber · restauratiedagboek · 2026',
 
+    'etapes.page.title':   'Stappen — Phoenix Weber',
     'etapes.kicker':       'Werkplaatslogboek',
     'etapes.h1':           'Restauratiestappen',
     'etapes.lede':         'Elke ingreep gedocumenteerd — beslissing, geprijs opties, maten, resultaat. In chronologische volgorde van het project.',
@@ -578,6 +581,7 @@ const PHOENIX_T = {
 
     'foot.sig': 'Phoenix Weber · Restaurierungsjournal · 2026',
 
+    'etapes.page.title':   'Schritte — Phoenix Weber',
     'etapes.kicker':       'Werkstattprotokoll',
     'etapes.h1':           'Restaurierungsschritte',
     'etapes.lede':         'Jeder Eingriff dokumentiert — Entscheidung, bepreiste Optionen, Maße, Ergebnis. In chronologischer Reihenfolge des Projekts.',

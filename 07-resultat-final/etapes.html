@@ -170,9 +170,12 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
     <nav class="nav-links">
       <a href="index.html" data-i18n="nav.home">Accueil</a>
       <a href="index.html#diagnostic" data-i18n="nav.diagnostic">Diagnostic</a>
+      <a href="index.html#eclate" data-i18n="nav.eclate">Éclaté</a>
       <a href="index.html#commandes" data-i18n="nav.commandes">Commandes</a>
-      <a href="etapes.html" class="active" data-i18n="nav.etapes">Étapes</a>
+      <a href="index.html#faq" data-i18n="nav.faq">FAQ</a>
       <a href="index.html#journal" data-i18n="nav.journal">Journal</a>
+      <a href="index.html#resultat" data-i18n="nav.resultat">Résultat</a>
+      <a href="etapes.html" class="active" data-i18n="nav.etapes">Étapes</a>
       <a href="schematics.html" data-i18n="nav.schematics">Schémas</a>
     </nav>
     <div class="lang-switcher" id="langSwitcher">
@@ -471,7 +474,7 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
       var key = el.getAttribute('data-i18n');
       if (T[key] !== undefined) el.innerHTML = T[key];
     });
-    if (T['page.title']) document.title = T['page.title'];
+    if (T['etapes.page.title']) document.title = T['etapes.page.title'];
     document.querySelectorAll('.lang-btn').forEach(function (btn) {
       var bl = btn.dataset.lang;
       btn.classList.toggle('active', bl === lang);
