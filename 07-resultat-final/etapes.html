@@ -63,6 +63,11 @@ header.nav { position: sticky; top: 0; z-index: 50; background: color-mix(in okl
 .nav-links a:hover { color: var(--fg); }
 .nav-links a.active { color: var(--accent); }
 .nav-links a.active::after { content:""; position:absolute; left:12px; right:12px; bottom:2px; height:2px; background: var(--accent); }
+.lang-switcher { display: flex; gap: 0; margin-left: 8px; border: 1px solid var(--border-2); border-radius: var(--radius); overflow: hidden; }
+.lang-btn { font-family: var(--font-mono); font-size: 0.67rem; letter-spacing: 0.08em; background: none; border: none; border-right: 1px solid var(--border-2); color: var(--muted); padding: 6px 8px; cursor: pointer; transition: background 0.15s, color 0.15s; }
+.lang-btn:last-child { border-right: none; }
+.lang-btn:hover { background: var(--surface-2); color: var(--fg); }
+.lang-btn.active { background: var(--accent); color: var(--accent-fg); }
 .theme-toggle { margin-left: 6px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-2); background: var(--surface); color: var(--fg); cursor: pointer; display: grid; place-items: center; transition: background 0.2s; }
 .theme-toggle:hover { background: var(--surface-2); }
 .theme-toggle svg { width: 18px; height: 18px; }
@@ -163,12 +168,19 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
       Phoenix&nbsp;Weber
     </a>
     <nav class="nav-links">
-      <a href="index.html">Accueil</a>
-      <a href="index.html#diagnostic">Diagnostic</a>
-      <a href="index.html#commandes">Commandes</a>
-      <a href="etapes.html" class="active">Étapes</a>
-      <a href="index.html#journal">Journal</a>
+      <a href="index.html" data-i18n="nav.home">Accueil</a>
+      <a href="index.html#diagnostic" data-i18n="nav.diagnostic">Diagnostic</a>
+      <a href="index.html#commandes" data-i18n="nav.commandes">Commandes</a>
+      <a href="etapes.html" class="active" data-i18n="nav.etapes">Étapes</a>
+      <a href="index.html#journal" data-i18n="nav.journal">Journal</a>
+      <a href="schematics.html" data-i18n="nav.schematics">Schémas</a>
     </nav>
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-btn active" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="nl">NL</button>
+      <button class="lang-btn" data-lang="de">DE</button>
+    </div>
     <button class="theme-toggle" id="themeToggle" aria-label="Basculer thème clair / sombre">
       <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
       <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
@@ -179,9 +191,9 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
 <main>
   <div class="page-header">
     <div class="wrap">
-      <span class="kicker">Carnet de chantier</span>
-      <h1 class="page-title">Étapes de restauration</h1>
-      <p class="page-lede">Chaque intervention documentée — décision, options chiffrées, mesures, résultat. Dans l'ordre chronologique du chantier.</p>
+      <span class="kicker" data-i18n="etapes.kicker">Carnet de chantier</span>
+      <h1 class="page-title" data-i18n="etapes.h1">Étapes de restauration</h1>
+      <p class="page-lede" data-i18n="etapes.lede">Chaque intervention documentée — décision, options chiffrées, mesures, résultat. Dans l'ordre chronologique du chantier.</p>
     </div>
   </div>
 
@@ -198,9 +210,9 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
         <div class="step-body">
           <div class="step-meta">
             <span class="step-date">09 juin 2026</span>
-            <span class="step-status">En cours — décision pending</span>
+            <span class="step-status" data-i18n="etapes.step1.status">En cours — décision pending</span>
           </div>
-          <h2 class="step-title">Plancher de meuble</h2>
+          <h2 class="step-title" data-i18n="etapes.step1.title">Plancher de meuble</h2>
           <p class="step-ref">Réf Weber 67756 · Cabinet Bottom · Genesis E-310 2007 (3741001)</p>
           <p class="step-lede">Plancher percé de part en part par la corrosion — 60 à 70 % de la surface centrale traversée. Pièce critique&nbsp;: loge la bouteille de propane. Deux options&nbsp;: acheter d'occasion sur eBay ou faire fabriquer en inox 304 par un artisan local.</p>
 
@@ -379,7 +391,7 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
             <span class="step-date">—</span>
             <span class="step-status">Pending</span>
           </div>
-          <h2 class="step-title">Manifold propane</h2>
+          <h2 class="step-title" data-i18n="etapes.step2.title">Manifold propane</h2>
           <p class="step-ref">Réf Weber 67708 · Mfld Gen 310 LP USA · Genesis E-310 2007 (3741001)</p>
           <p class="step-lede">Manifold complètement rouillé aux extrémités — vis à couper pour la dépose. Remplacement obligatoire. Pièce LP propane uniquement&nbsp;: ne pas substituer par le <code>67610</code> (gaz naturel NG, orifices incompatibles).</p>
           <div class="note">
@@ -400,7 +412,7 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
             <span class="step-date">—</span>
             <span class="step-status">Pending</span>
           </div>
-          <h2 class="step-title">Nettoyage firebox</h2>
+          <h2 class="step-title" data-i18n="etapes.step3.title">Nettoyage firebox</h2>
           <p class="step-ref">Cuve confirmée non perforée · Date fabrication 29/11/2007</p>
           <p class="step-lede">Très encrassée — graisse carbonisée épaisse, rouille superficielle. Protocole&nbsp;: Décap'Four + brosse inox + culottage huile végétale 250&nbsp;°C / 30&nbsp;min. Aucun remplacement nécessaire.</p>
         </div>
@@ -416,7 +428,7 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A12 12 0 000 12.6c0 5.34 3.44 9.86 8.21 11.46.6.11.82-.26.82-.58v-2.2c-3.34.74-4.04-1.45-4.04-1.45-.55-1.4-1.34-1.78-1.34-1.78-1.09-.76.08-.74.08-.74 1.2.09 1.84 1.26 1.84 1.26 1.07 1.86 2.81 1.32 3.5 1.01.11-.79.42-1.32.76-1.62-2.67-.31-5.47-1.36-5.47-6.05 0-1.34.46-2.43 1.22-3.29-.12-.31-.53-1.55.12-3.23 0 0 1-.33 3.3 1.26a11.3 11.3 0 016 0c2.29-1.59 3.29-1.26 3.29-1.26.65 1.68.24 2.92.12 3.23.77.86 1.22 1.95 1.22 3.29 0 4.7-2.81 5.74-5.49 6.04.43.38.81 1.12.81 2.26v3.35c0 .32.22.7.83.58A12 12 0 0024 12.6 12 12 0 0012 .5z"></path></svg>
       Fguarien / phoenix-weber
     </a>
-    <span class="sig">Phoenix Weber · journal de restauration · 2026</span>
+    <span class="sig" data-i18n="foot.sig">Phoenix Weber · journal de restauration · 2026</span>
   </div>
 </footer>
 
@@ -442,6 +454,40 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
     entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
   }, { threshold: 0.08, rootMargin: '0px 0px -5% 0px' });
   els.forEach(function (e) { io.observe(e); });
+})();
+</script>
+<script src="translations.js"></script>
+<script>
+(function () {
+  var LANG_KEY = 'phoenix-lang';
+  var root = document.documentElement;
+  function getLang() { try { return localStorage.getItem(LANG_KEY) || 'fr'; } catch (e) { return 'fr'; } }
+  function saveLang(l) { try { localStorage.setItem(LANG_KEY, l); } catch (e) {} }
+  function applyLang(lang) {
+    if (!window.PHOENIX_T || !window.PHOENIX_T[lang]) return;
+    var T = window.PHOENIX_T[lang];
+    root.lang = T.ariaLang || lang;
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n');
+      if (T[key] !== undefined) el.innerHTML = T[key];
+    });
+    if (T['page.title']) document.title = T['page.title'];
+    document.querySelectorAll('.lang-btn').forEach(function (btn) {
+      var bl = btn.dataset.lang;
+      btn.classList.toggle('active', bl === lang);
+      if (T.langNames && T.langNames[bl]) btn.textContent = T.langNames[bl];
+    });
+  }
+  applyLang(getLang());
+  var sw = document.getElementById('langSwitcher');
+  if (sw) {
+    sw.addEventListener('click', function (e) {
+      var btn = e.target.closest('.lang-btn');
+      if (!btn || !btn.dataset.lang) return;
+      saveLang(btn.dataset.lang);
+      applyLang(btn.dataset.lang);
+    });
+  }
 })();
 </script>
 </body></html>

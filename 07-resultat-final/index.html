@@ -484,8 +484,23 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
 @media (prefers-reduced-motion: reduce) { .reveal { opacity:1; transform:none; transition:none; } html{scroll-behavior:auto;} }
 
 /* ---------- responsive ---------- */
+/* lang switcher */
+.lang-switcher {
+  display: flex; gap: 0; margin-left: 8px;
+  border: 1px solid var(--border-2); border-radius: var(--radius); overflow: hidden;
+}
+.lang-btn {
+  font-family: var(--font-mono); font-size: 0.67rem; letter-spacing: 0.08em;
+  background: none; border: none; border-right: 1px solid var(--border-2); color: var(--muted);
+  padding: 6px 8px; cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+.lang-btn:last-child { border-right: none; }
+.lang-btn:hover { background: var(--surface-2); color: var(--fg); }
+.lang-btn.active { background: var(--accent); color: var(--accent-fg); }
+
 @media (max-width: 860px) {
   .nav-links { display: none; }
+  .lang-switcher { display: none; }
   .hero-grid { grid-template-columns: 1fr; }
   .hero-photo-stack { order: -1; }
   .diag-grid { grid-template-columns: 1fr; }
@@ -699,15 +714,22 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
       Phoenix&nbsp;Weber
     </div>
     <nav class="nav-links" id="navlinks" data-od-id="path-0-0-1">
-      <a href="#accueil" class="active" data-od-id="path-0-0-1-0">Accueil</a>
-      <a href="#diagnostic" data-od-id="path-0-0-1-1">Diagnostic</a>
-      <a href="#eclate" data-od-id="path-0-0-1-2">Éclaté</a>
-      <a href="#commandes" data-od-id="path-0-0-1-3">Commandes</a>
-      <a href="#faq">FAQ</a>
-      <a href="#journal" data-od-id="path-0-0-1-4">Journal</a>
-      <a href="#resultat" data-od-id="path-0-0-1-5">Résultat</a>
-      <a href="etapes.html">Étapes</a>
+      <a href="#accueil" class="active" data-od-id="path-0-0-1-0" data-i18n="nav.home">Accueil</a>
+      <a href="#diagnostic" data-od-id="path-0-0-1-1" data-i18n="nav.diagnostic">Diagnostic</a>
+      <a href="#eclate" data-od-id="path-0-0-1-2" data-i18n="nav.eclate">Éclaté</a>
+      <a href="#commandes" data-od-id="path-0-0-1-3" data-i18n="nav.commandes">Commandes</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+      <a href="#journal" data-od-id="path-0-0-1-4" data-i18n="nav.journal">Journal</a>
+      <a href="#resultat" data-od-id="path-0-0-1-5" data-i18n="nav.resultat">Résultat</a>
+      <a href="etapes.html" data-i18n="nav.etapes">Étapes</a>
+      <a href="schematics.html" data-i18n="nav.schematics">Schémas</a>
     </nav>
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-btn active" data-lang="fr">FR</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="nl">NL</button>
+      <button class="lang-btn" data-lang="de">DE</button>
+    </div>
     <button class="theme-toggle" id="themeToggle" aria-label="Basculer thème clair / sombre" title="Thème clair / sombre" data-od-id="path-0-0-2">
       <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
       <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
@@ -721,10 +743,10 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
 <section id="accueil" class="hero" data-od-id="path-1-0">
   <div class="wrap hero-grid" data-od-id="path-1-0-0">
     <div class="hero-copy reveal">
-      <span class="kicker">Projet de restauration · 01</span>
-      <h1 data-od-id="path-1-0-0-0-1">Renaître<br><span class="out">des cendres</span></h1>
-      <p class="sub">Weber Genesis <b>E-310</b> &nbsp;·&nbsp; millésime <b>2007</b></p>
-      <p class="lede">
+      <span class="kicker" data-i18n="hero.kicker">Projet de restauration · 01</span>
+      <h1 data-od-id="path-1-0-0-0-1"><span data-i18n="hero.h1.line1">Renaître</span><br><span class="out" data-i18n="hero.h1.line2">des cendres</span></h1>
+      <p class="sub" data-i18n="hero.sub">Weber Genesis <b>E-310</b> &nbsp;·&nbsp; millésime <b>2007</b></p>
+      <p class="lede" data-i18n="hero.lede">
         Récupéré gratuitement le 5 juin 2026 en débarrassant une maison.
         Couvert de suie et de rouille, mais une fonte solide dessous.
         Objectif&nbsp;: le démonter, diagnostiquer chaque pièce, le remettre à neuf —
@@ -733,16 +755,16 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
 
       <div class="status-card">
         <div class="row">
-          <span class="lbl">Statut</span>
-          <span class="pill todo">Diagnostic terminé</span>
+          <span class="lbl" data-i18n="hero.status.label">Statut</span>
+          <span class="pill todo" data-i18n="hero.status.pill">Diagnostic terminé</span>
         </div>
         <div class="row">
-          <span class="lbl">Reçu le</span>
-          <span class="val">05.06.2026 — gratuit</span>
+          <span class="lbl" data-i18n="hero.status.received">Reçu le</span>
+          <span class="val" data-i18n="hero.status.val">05.06.2026 — gratuit</span>
         </div>
         <div class="row">
-          <span class="lbl">Avancement</span>
-          <span class="val">Identifié · pièces listées</span>
+          <span class="lbl" data-i18n="hero.status.progress">Avancement</span>
+          <span class="val" data-i18n="hero.status.adv">Identifié · pièces listées</span>
         </div>
         <div class="progress"><i></i></div>
       </div>
@@ -771,9 +793,9 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
   <div class="wrap" data-od-id="path-1-1-0">
     <div class="sec-head reveal">
       <div>
-        <span class="kicker">Diagnostic · 02</span>
-        <h2 class="section-title" data-od-id="path-1-1-0-0-0-1">Identification &amp; pièces</h2>
-        <p class="section-lede">Modèle verrouillé à 100&nbsp;%. La cuve est saine — mais un point de sécurité bloque tout rallumage tant qu'il n'est pas traité.</p>
+        <span class="kicker" data-i18n="diag.kicker">Diagnostic · 02</span>
+        <h2 class="section-title" data-od-id="path-1-1-0-0-0-1" data-i18n="diag.h2">Identification &amp; pièces</h2>
+        <p class="section-lede" data-i18n="diag.lede">Modèle verrouillé à 100&nbsp;%. La cuve est saine — mais un point de sécurité bloque tout rallumage tant qu'il n'est pas traité.</p>
       </div>
       <span class="sec-index">02 / 05</span>
     </div>
@@ -880,9 +902,9 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
   <div class="wrap" data-od-id="path-1-2-1">
     <div class="sec-head reveal">
       <div>
-        <span class="kicker">Vue éclatée · 03</span>
-        <h2 class="section-title" data-od-id="path-1-2-1-0-0-1">Démontage &amp; remontage</h2>
-        <p class="section-lede">Vue éclatée interactive du Genesis E-310 (3741001). Survole une pièce pour sa référence Weber, son état et sa note de démontage. Les numéros donnent l'ordre de dépose, du haut vers le bas.</p>
+        <span class="kicker" data-i18n="eclate.kicker">Vue éclatée · 03</span>
+        <h2 class="section-title" data-od-id="path-1-2-1-0-0-1" data-i18n="eclate.h2">Démontage &amp; remontage</h2>
+        <p class="section-lede" data-i18n="eclate.lede">Vue éclatée interactive du Genesis E-310 (3741001). Survole une pièce pour sa référence Weber, son état et sa note de démontage. Les numéros donnent l'ordre de dépose, du haut vers le bas.</p>
       </div>
       <span class="sec-index">03 / 06</span>
     </div>
@@ -1037,9 +1059,9 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
   <div class="wrap" data-od-id="path-1-3-0">
     <div class="sec-head reveal">
       <div>
-        <span class="kicker">Commandes · 04</span>
-        <h2 class="section-title" data-od-id="path-1-3-0-0-0-1">Pièces &amp; budget</h2>
-        <p class="section-lede">Suivi des achats au fil du diagnostic. Le barbecue était gratuit — reste le coût des pièces.</p>
+        <span class="kicker" data-i18n="cmd.kicker">Commandes · 04</span>
+        <h2 class="section-title" data-od-id="path-1-3-0-0-0-1" data-i18n="cmd.h2">Pièces &amp; budget</h2>
+        <p class="section-lede" data-i18n="cmd.lede">Suivi des achats au fil du diagnostic. Le barbecue était gratuit — reste le coût des pièces.</p>
       </div>
       <span class="sec-index">04 / 06</span>
     </div>
@@ -1260,9 +1282,9 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
   <div class="wrap">
     <div class="sec-head reveal">
       <div>
-        <span class="kicker">Questions fréquentes · 06</span>
-        <h2 class="section-title">FAQ — Weber Genesis</h2>
-        <p class="section-lede">Ce qu'on apprend en cherchant des pièces. Chaque question a coûté du temps — autant le documenter.</p>
+        <span class="kicker" data-i18n="faq.kicker">Questions fréquentes · 06</span>
+        <h2 class="section-title" data-i18n="faq.h2">FAQ — Weber Genesis</h2>
+        <p class="section-lede" data-i18n="faq.lede">Ce qu'on apprend en cherchant des pièces. Chaque question a coûté du temps — autant le documenter.</p>
       </div>
       <span class="sec-index">06 / 07</span>
     </div>
@@ -1480,17 +1502,17 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
   <div class="wrap" data-od-id="path-1-4-0">
     <div class="sec-head reveal">
       <div>
-        <span class="kicker">Journal de travaux · 05</span>
-        <h2 class="section-title" data-od-id="path-1-4-0-0-0-1">Carnet de bord</h2>
-        <p class="section-lede">Chaque étape, datée. Du jour de la récupération à la première flamme.</p>
+        <span class="kicker" data-i18n="journal.kicker">Journal de travaux · 05</span>
+        <h2 class="section-title" data-od-id="path-1-4-0-0-0-1" data-i18n="journal.h2">Carnet de bord</h2>
+        <p class="section-lede" data-i18n="journal.lede">Chaque étape, datée. Du jour de la récupération à la première flamme.</p>
       </div>
       <span class="sec-index">05 / 06</span>
     </div>
 
     <div class="timeline reveal">
       <div class="entry is-first">
-        <div class="date">05 juin 2026 — Jour 0</div>
-        <h4 data-od-id="path-1-4-0-1-0-1">Lancement · Identification · Diagnostic</h4>
+        <div class="date" data-i18n="journal.entry1.date">05 juin 2026 — Jour 0</div>
+        <h4 data-od-id="path-1-4-0-1-0-1" data-i18n="journal.entry1.h4">Lancement · Identification · Diagnostic</h4>
         <p>
           Récupéré gratuitement en débarrassant une maison. Structure du projet créée et
           <b style="color:var(--fg)">10 photos de l'état initial</b> analysées. Modèle verrouillé à 100&nbsp;%&nbsp;:
@@ -1509,8 +1531,8 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
       </div>
 
       <div class="entry">
-        <div class="date">07 juin 2026 — Jour 2</div>
-        <h4>Premier démontage · Étendue des dégâts</h4>
+        <div class="date" data-i18n="journal.entry2.date">07 juin 2026 — Jour 2</div>
+        <h4 data-i18n="journal.entry2.h4">Premier démontage · Étendue des dégâts</h4>
         <p>
           Démontage complet&nbsp;: grilles de cuisson, Flavorizer bars, brûleurs, plancher du meuble.
           <b style="color:oklch(64% 0.2 25)">Dégâts confirmés</b>&nbsp;: plancher 67756 perforé sur 3&nbsp;zones,
@@ -1541,8 +1563,8 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
       </div>
 
       <div class="entry">
-        <div class="date">08 juin 2026 — Jour 3</div>
-        <h4>Sourcing pièces · Firebox confirmée saine</h4>
+        <div class="date" data-i18n="journal.entry3.date">08 juin 2026 — Jour 3</div>
+        <h4 data-i18n="journal.entry3.h4">Sourcing pièces · Firebox confirmée saine</h4>
         <p>
           Vérification physique&nbsp;: <b style="color:oklch(55% 0.18 145)">cuve (firebox) non perforée</b> — la lumière visible en photo était un reflet. Économie ~&nbsp;€80–120 (cookbox non nécessaire).
           Sourcing complet des pièces en inox 304&nbsp;: brûleurs 67722 en stock chez Nordic BBQ Store (€47,80), flavorizer bars inox chez grillpartsreplacement.com warehouse EU (€61), grilles 7528 inox (2 restantes Nordic BBQ Store €54,99). Plancher 67756 trouvé sur eBay. Allumeur 67726 (boîtier métal 2007) uniquement chez Esprit Barbecue. <b style="color:var(--fg)">Règle clé pour la durabilité</b>&nbsp;: toujours choisir l'inox 304 plutôt que l'émaillé porcelaine noir pour les flavorizer bars et brûleurs — durée de vie 3–4× plus longue en climat humide.
@@ -1550,8 +1572,8 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
       </div>
 
       <div class="entry">
-        <div class="date">Prochaine étape</div>
-        <h4>Commande des pièces · Nettoyage cuve</h4>
+        <div class="date" data-i18n="journal.next.date">Prochaine étape</div>
+        <h4 data-i18n="journal.next.h4">Commande des pièces · Nettoyage cuve</h4>
         <p>Commander en priorité le bac de fond 67756 (sécurité), puis brûleurs + flavorizer bars inox + grilles. Lancer le nettoyage de la cuve&nbsp;: Décap'Four 20–30 min, brosse inox, rinçage, séchage, culottage à l'huile végétale (250°C / 30 min).</p>
       </div>
     </div>
@@ -1565,9 +1587,9 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
   <div class="wrap" data-od-id="path-1-5-0">
     <div class="sec-head reveal">
       <div>
-        <span class="kicker">Résultat final · 06</span>
-        <h2 class="section-title" data-od-id="path-1-5-0-0-0-1">Avant / Après</h2>
-        <p class="section-lede">La comparaison qui justifie tout le chantier. À venir une fois la première cuisson faite.</p>
+        <span class="kicker" data-i18n="result.kicker">Résultat final · 06</span>
+        <h2 class="section-title" data-od-id="path-1-5-0-0-0-1" data-i18n="result.h2">Avant / Après</h2>
+        <p class="section-lede" data-i18n="result.lede">La comparaison qui justifie tout le chantier. À venir une fois la première cuisson faite.</p>
       </div>
       <span class="sec-index">06 / 06</span>
     </div>
@@ -1624,7 +1646,7 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5A12 12 0 000 12.6c0 5.34 3.44 9.86 8.21 11.46.6.11.82-.26.82-.58v-2.2c-3.34.74-4.04-1.45-4.04-1.45-.55-1.4-1.34-1.78-1.34-1.78-1.09-.76.08-.74.08-.74 1.2.09 1.84 1.26 1.84 1.26 1.07 1.86 2.81 1.32 3.5 1.01.11-.79.42-1.32.76-1.62-2.67-.31-5.47-1.36-5.47-6.05 0-1.34.46-2.43 1.22-3.29-.12-.31-.53-1.55.12-3.23 0 0 1-.33 3.3 1.26a11.3 11.3 0 016 0c2.29-1.59 3.29-1.26 3.29-1.26.65 1.68.24 2.92.12 3.23.77.86 1.22 1.95 1.22 3.29 0 4.7-2.81 5.74-5.49 6.04.43.38.81 1.12.81 2.26v3.35c0 .32.22.7.83.58A12 12 0 0024 12.6 12 12 0 0012 .5z"></path></svg>
       Fguarien / phoenix-weber
     </a>
-    <span class="sig">Phoenix Weber · journal de restauration · 2026</span>
+    <span class="sig" data-i18n="foot.sig">Phoenix Weber · journal de restauration · 2026</span>
   </div>
 </footer>
 
@@ -1682,6 +1704,7 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
   var svg = stage.querySelector('.eclate-svg');
   var parts = Array.prototype.slice.call(stage.querySelectorAll('.part'));
   var statusText = { crit: 'Critique — sécurité', replace: 'À remplacer', keep: 'Récupérable' };
+  window._eclateSetStatusText = function (t) { statusText = t; };
 
   function setExploded(on) {
     stage.classList.toggle('exploded', on);
@@ -1743,6 +1766,85 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
       });
     }, { threshold: 0.4 });
     io.observe(stage);
+  }
+})();
+</script>
+
+<!-- i18n -->
+<script src="translations.js"></script>
+<script>
+(function () {
+  var LANG_KEY = 'phoenix-lang';
+  var root = document.documentElement;
+
+  function getLang() {
+    try { return localStorage.getItem(LANG_KEY) || 'fr'; } catch (e) { return 'fr'; }
+  }
+  function saveLang(l) {
+    try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
+  }
+
+  function applyLang(lang) {
+    if (!window.PHOENIX_T || !window.PHOENIX_T[lang]) return;
+    var T = window.PHOENIX_T[lang];
+    root.lang = T.ariaLang || lang;
+
+    /* text / html nodes */
+    document.querySelectorAll('[data-i18n]').forEach(function (el) {
+      var key = el.getAttribute('data-i18n');
+      if (T[key] !== undefined) el.innerHTML = T[key];
+    });
+
+    /* page title */
+    if (T['page.title']) document.title = T['page.title'];
+
+    /* lang buttons */
+    document.querySelectorAll('.lang-btn').forEach(function (btn) {
+      var bl = btn.dataset.lang;
+      btn.classList.toggle('active', bl === lang);
+      if (T.langNames && T.langNames[bl]) btn.textContent = T.langNames[bl];
+    });
+
+    /* exploded view: update SVG part data-* and statusText */
+    if (T.parts) {
+      var stage = document.getElementById('eclate-stage');
+      if (stage) {
+        stage.querySelectorAll('.part[class*=" l"],.part[class*="l"]').forEach(function (el) {
+          var classes = el.className.split(' ');
+          var lClass = classes.find(function (c) { return /^l\d+$/.test(c); });
+          if (lClass && T.parts[lClass]) {
+            var pd = T.parts[lClass];
+            if (pd.name) el.setAttribute('data-name', pd.name);
+            if (pd.ref)  el.setAttribute('data-ref',  pd.ref);
+            if (pd.note) el.setAttribute('data-note', pd.note);
+          }
+        });
+      }
+    }
+
+    /* exploded view: statusText strings (used in tooltip) */
+    if (window._eclateSetStatusText && T['status.crit']) {
+      window._eclateSetStatusText({
+        crit:    T['status.crit'],
+        replace: T['status.replace'],
+        keep:    T['status.keep']
+      });
+    }
+  }
+
+  /* init */
+  var initLang = getLang();
+  applyLang(initLang);
+
+  /* click */
+  var switcher = document.getElementById('langSwitcher');
+  if (switcher) {
+    switcher.addEventListener('click', function (e) {
+      var btn = e.target.closest('.lang-btn');
+      if (!btn || !btn.dataset.lang) return;
+      saveLang(btn.dataset.lang);
+      applyLang(btn.dataset.lang);
+    });
   }
 })();
 </script>
