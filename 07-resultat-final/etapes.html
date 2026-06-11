@@ -63,11 +63,18 @@ header.nav { position: sticky; top: 0; z-index: 50; background: color-mix(in okl
 .nav-links a:hover { color: var(--fg); }
 .nav-links a.active { color: var(--accent); }
 .nav-links a.active::after { content:""; position:absolute; left:12px; right:12px; bottom:2px; height:2px; background: var(--accent); }
-.lang-switcher { display: flex; gap: 0; margin-left: 8px; border: 1px solid var(--border-2); border-radius: var(--radius); overflow: hidden; }
-.lang-btn { font-family: var(--font-mono); font-size: 0.67rem; letter-spacing: 0.08em; background: none; border: none; border-right: 1px solid var(--border-2); color: var(--muted); padding: 6px 8px; cursor: pointer; transition: background 0.15s, color 0.15s; }
-.lang-btn:last-child { border-right: none; }
-.lang-btn:hover { background: var(--surface-2); color: var(--fg); }
-.lang-btn.active { background: var(--accent); color: var(--accent-fg); }
+.lang-dropdown { position: relative; margin-left: 8px; }
+.lang-dropdown-btn { display: flex; align-items: center; gap: 5px; background: var(--surface); border: 1px solid var(--border-2); border-radius: var(--radius); color: var(--fg-soft); padding: 5px 9px; cursor: pointer; height: 36px; transition: background 0.15s, border-color 0.15s; }
+.lang-dropdown-btn:hover { background: var(--surface-2); border-color: var(--accent); color: var(--fg); }
+.lang-flag-cur { font-size: 1.35rem; line-height: 1; }
+.lang-chevron { width: 11px; height: 11px; stroke: var(--muted); flex-shrink: 0; transition: transform 0.2s; }
+.lang-dropdown.open .lang-chevron { transform: rotate(180deg); }
+.lang-dropdown-menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 200; background: var(--surface); border: 1px solid var(--border-2); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; min-width: 148px; opacity: 0; transform: translateY(-6px); pointer-events: none; transition: opacity 0.15s, transform 0.15s ease; }
+.lang-dropdown.open .lang-dropdown-menu { opacity: 1; transform: none; pointer-events: all; }
+.lang-option { display: flex; align-items: center; gap: 10px; width: 100%; background: none; border: none; text-align: left; color: var(--fg-soft); padding: 9px 14px; cursor: pointer; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.05em; transition: background 0.1s, color 0.1s; }
+.lang-option:hover { background: var(--surface-2); color: var(--fg); }
+.lang-option.active { color: var(--accent); background: color-mix(in oklch, var(--accent) 9%, var(--surface)); }
+.lang-option .lo-flag { font-size: 1.25rem; line-height: 1; }
 .theme-toggle { margin-left: 6px; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border-2); background: var(--surface); color: var(--fg); cursor: pointer; display: grid; place-items: center; transition: background 0.2s; }
 .theme-toggle:hover { background: var(--surface-2); }
 .theme-toggle svg { width: 18px; height: 18px; }
@@ -178,11 +185,17 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
       <a href="etapes.html" class="active" data-i18n="nav.etapes">Étapes</a>
       <a href="schematics.html" data-i18n="nav.schematics">Schémas</a>
     </nav>
-    <div class="lang-switcher" id="langSwitcher">
-      <button class="lang-btn active" data-lang="fr" title="Français">🇫🇷</button>
-      <button class="lang-btn" data-lang="en" title="English">🇬🇧</button>
-      <button class="lang-btn" data-lang="nl" title="Nederlands">🇳🇱</button>
-      <button class="lang-btn" data-lang="de" title="Deutsch">🇩🇪</button>
+        <div class="lang-dropdown" id="langSwitcher">
+      <button class="lang-dropdown-btn" id="langDropBtn" aria-haspopup="listbox" aria-expanded="false" title="Language">
+        <span class="lang-flag-cur" id="langFlagCur">🇫🇷</span>
+        <svg class="lang-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="lang-dropdown-menu" id="langDropMenu" role="listbox" aria-label="Choose language">
+        <button class="lang-option active" data-lang="fr" role="option"><span class="lo-flag">🇫🇷</span>Français</button>
+        <button class="lang-option" data-lang="en" role="option"><span class="lo-flag">🇬🇧</span>English</button>
+        <button class="lang-option" data-lang="nl" role="option"><span class="lo-flag">🇳🇱</span>Nederlands</button>
+        <button class="lang-option" data-lang="de" role="option"><span class="lo-flag">🇩🇪</span>Deutsch</button>
+      </div>
     </div>
     <button class="theme-toggle" id="themeToggle" aria-label="Basculer thème clair / sombre">
       <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path></svg>
@@ -475,20 +488,31 @@ footer.foot { border-top: 1px solid var(--border); padding: clamp(28px, 4vw, 40p
       if (T[key] !== undefined) el.innerHTML = T[key];
     });
     if (T['etapes.page.title']) document.title = T['etapes.page.title'];
-    document.querySelectorAll('.lang-btn').forEach(function (btn) {
+    document.querySelectorAll('.lang-option').forEach(function (btn) {
       var bl = btn.dataset.lang;
       btn.classList.toggle('active', bl === lang);
-      if (T.langNames && T.langNames[bl]) btn.textContent = T.langNames[bl];
     });
+    var flagEl = document.getElementById('langFlagCur');
+    if (flagEl && T.langNames) flagEl.textContent = T.langNames[lang] || flagEl.textContent;
   }
   applyLang(getLang());
-  var sw = document.getElementById('langSwitcher');
-  if (sw) {
-    sw.addEventListener('click', function (e) {
-      var btn = e.target.closest('.lang-btn');
+  var dropBtn = document.getElementById('langDropBtn');
+  var dropMenu = document.getElementById('langDropMenu');
+  var dropWrap = document.getElementById('langSwitcher');
+  function openDrop(v) {
+    if (dropWrap) dropWrap.classList.toggle('open', v);
+    if (dropBtn) dropBtn.setAttribute('aria-expanded', v ? 'true' : 'false');
+  }
+  if (dropBtn) dropBtn.addEventListener('click', function (e) { e.stopPropagation(); openDrop(!dropWrap.classList.contains('open')); });
+  document.addEventListener('click', function () { openDrop(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openDrop(false); });
+  if (dropMenu) {
+    dropMenu.addEventListener('click', function (e) {
+      var btn = e.target.closest('.lang-option');
       if (!btn || !btn.dataset.lang) return;
       saveLang(btn.dataset.lang);
       applyLang(btn.dataset.lang);
+      openDrop(false);
     });
   }
 })();
