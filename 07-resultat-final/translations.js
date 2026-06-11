@@ -166,7 +166,7 @@ const PHOENIX_T = {
     'schematics.sourcing.h2':'Fournisseurs EU',
     'schematics.sourcing.lede':'Sources testées pour livraison en France / Belgique / EU.',
 
-    langNames: { fr: 'FR', en: 'EN', nl: 'NL', de: 'DE' }
+    langNames: { fr: '🇫🇷', en: '🇬🇧', nl: '🇳🇱', de: '🇩🇪' }
   },
 
   /* ──────────────────────────────────────────────────────────
@@ -313,7 +313,7 @@ const PHOENIX_T = {
     'schematics.sourcing.h2':'EU Suppliers',
     'schematics.sourcing.lede':'Tested sources for delivery to France / Belgium / EU.',
 
-    langNames: { fr: 'FR', en: 'EN', nl: 'NL', de: 'DE' }
+    langNames: { fr: '🇫🇷', en: '🇬🇧', nl: '🇳🇱', de: '🇩🇪' }
   },
 
   /* ──────────────────────────────────────────────────────────
@@ -460,7 +460,7 @@ const PHOENIX_T = {
     'schematics.sourcing.h2':'EU Leveranciers',
     'schematics.sourcing.lede':'Geteste bronnen voor levering in Frankrijk / België / EU.',
 
-    langNames: { fr: 'FR', en: 'EN', nl: 'NL', de: 'DE' }
+    langNames: { fr: '🇫🇷', en: '🇬🇧', nl: '🇳🇱', de: '🇩🇪' }
   },
 
   /* ──────────────────────────────────────────────────────────
@@ -607,7 +607,7 @@ const PHOENIX_T = {
     'schematics.sourcing.h2':'EU-Lieferanten',
     'schematics.sourcing.lede':'Getestete Quellen für Lieferung nach Frankreich / Belgien / EU.',
 
-    langNames: { fr: 'FR', en: 'EN', nl: 'NL', de: 'DE' }
+    langNames: { fr: '🇫🇷', en: '🇬🇧', nl: '🇳🇱', de: '🇩🇪' }
   }
 };
 
