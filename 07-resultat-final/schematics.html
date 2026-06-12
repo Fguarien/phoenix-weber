@@ -420,10 +420,80 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
 .foot a.repo:hover { color: var(--accent); border-color: var(--accent); }
 .foot .sig { font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); letter-spacing: 0.06em; }
 
+/* ── exploded view (interactive) ── */
+.eclate-head { margin-bottom: 14px; }
+.eclate-hint {
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.04em;
+  color: var(--muted); margin-top: 10px; display: flex; align-items: center; gap: 8px;
+}
+.eclate-hint::before { content:""; width: 16px; height: 1px; background: var(--muted); }
+.eclate-fig {
+  position: relative; max-width: 760px; margin: 4px auto 0;
+}
+.eclate-fig img {
+  width: 100%; height: auto; display: block;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: #fff;
+}
+[data-theme="dark"] .eclate-fig img { filter: invert(0.93) hue-rotate(180deg); }
+
+.eclate-hotspot {
+  position: absolute; width: 3.4%; aspect-ratio: 1 / 1;
+  transform: translate(-50%, -50%);
+  border: 2px solid transparent; border-radius: 50%;
+  background: transparent; padding: 0; cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.eclate-hotspot:hover,
+.eclate-hotspot:focus-visible,
+.eclate-hotspot.active {
+  border-color: var(--accent);
+  background: color-mix(in oklch, var(--accent) 16%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent) 13%, transparent);
+  outline: none;
+}
+
+.eclate-tip {
+  position: absolute; z-index: 30; min-width: 184px; max-width: 248px;
+  background: var(--surface); border: 1px solid var(--border-2);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 11px 13px; pointer-events: none; opacity: 0;
+  transform: translateY(4px); transition: opacity 0.14s, transform 0.14s;
+}
+.eclate-tip.show { opacity: 1; transform: none; }
+.eclate-tip .tip-num {
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+  display: inline-block;
+}
+.eclate-tip .tip-part { padding: 6px 0; border-top: 1px solid var(--border); }
+.eclate-tip .tip-part:first-of-type { border-top: 0; padding-top: 0; }
+.eclate-tip .tip-ref {
+  font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600;
+  color: var(--accent); display: block;
+}
+.eclate-tip .tip-name-fr { font-size: 0.84rem; font-weight: 600; color: var(--fg); display: block; margin-top: 1px; }
+.eclate-tip .tip-name-en { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); display: block; }
+.eclate-tip .tip-crit {
+  font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: oklch(64% 0.2 25); margin-top: 3px; display: inline-block;
+}
+
+/* row flash on hotspot click */
+@keyframes rowflash {
+  0%, 100% { background: var(--surface); }
+  25%      { background: color-mix(in oklch, var(--accent) 24%, var(--surface)); }
+}
+table.parts-tbl tbody tr.row-flash { animation: rowflash 1.5s ease; }
+
 /* ── responsive ── */
 @media (max-width: 860px) {
   .nav-links { display: none; }
   .sourcing-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .eclate-hotspot { width: 5.2%; }
+  .eclate-tip { min-width: 150px; max-width: 200px; }
 }
 @media (max-width: 600px) {
   .filter-bar { flex-direction: column; align-items: stretch; }
@@ -492,6 +562,29 @@ footer.foot { border-top: 1px solid var(--border); padding: 48px 0; }
     </div>
   </div>
 </div>
+
+<!-- ============ EXPLODED VIEW (interactive) ============ -->
+<section class="block" id="eclate-section">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eclate-head">
+        <span class="kicker" id="eclateKicker">Vue éclatée · 00</span>
+        <h2 class="section-title" id="eclateTitle">Schéma interactif</h2>
+        <p class="section-lede" id="eclateLede">
+          Vue éclatée officielle Weber (réf. 3741053). Survolez un numéro pour afficher
+          la désignation et la référence de la pièce.
+        </p>
+        <div class="eclate-hint" id="eclateHint">Survolez un numéro · cliquez pour le retrouver dans le tableau</div>
+      </div>
+    </div>
+
+    <figure class="eclate-fig reveal" id="eclateFig">
+      <img src="assets/eclate-e310.png" alt="Vue éclatée Weber Genesis E-310 LP 2007 (schéma 3741053)" loading="lazy" draggable="false">
+      <!-- hotspots injected by JS -->
+      <div class="eclate-tip" id="eclateTip" role="tooltip" aria-hidden="true"></div>
+    </figure>
+  </div>
+</section>
 
 <!-- ============ PARTS TABLE ============ -->
 <section class="block" id="parts-section">
@@ -887,6 +980,8 @@ function renderRows() {
 
     var tr = document.createElement('tr');
     if (p.crit) tr.className = 'row-crit';
+    tr.id = 'row-' + p.ref;
+    tr.dataset.ref = p.ref;
 
     /* ref cell with copy button */
     var refHtml = '<div class="col-ref-wrap">'
@@ -945,6 +1040,155 @@ function renderRows() {
 
 /* initial render */
 renderRows();
+
+/* ============================================================
+   EXPLODED VIEW — interactive hotspots
+   Callout number → [x%, y%] on the 1014×1052 schematic.
+   Parts are matched to a number via their `num` field (ranges
+   like "30–32", "45/46", "19/20" are expanded). Numbers with no
+   catalogued part (23, 24, 25, 39 = loose hardware) are skipped.
+   ============================================================ */
+(function() {
+  var COORDS = {
+    1:[18.0,8.8],  2:[18.0,10.7], 3:[18.0,12.7], 4:[18.0,14.6], 5:[18.0,16.6],
+    6:[18.0,19.2], 7:[18.0,21.3], 8:[18.0,29.4],
+    9:[18.0,40.3], 10:[18.0,43.3], 11:[18.0,45.7], 12:[18.0,59.3], 13:[18.0,61.7],
+    14:[18.0,66.5], 15:[18.0,69.9], 16:[18.0,72.4], 17:[18.0,73.8], 18:[18.0,75.7],
+    19:[18.0,79.4], 20:[18.0,85.6], 21:[18.0,90.0],
+    22:[81.6,16.1], 23:[81.6,20.2], 24:[81.6,21.7], 25:[81.6,23.3], 26:[81.6,26.1],
+    27:[81.6,27.7], 28:[81.6,30.2],
+    29:[81.4,36.2], 30:[81.4,40.4], 31:[81.4,42.0], 32:[81.4,43.8], 33:[81.4,49.2],
+    34:[81.4,59.5], 35:[81.4,61.2], 36:[81.4,63.5],
+    37:[81.4,67.9], 38:[81.4,71.0], 39:[81.4,74.0], 40:[81.4,75.9], 41:[81.4,79.6],
+    42:[81.4,83.3], 43:[81.4,85.1], 44:[81.4,87.8], 45:[81.4,89.3], 46:[81.4,92.9]
+  };
+
+  var fig = document.getElementById('eclateFig');
+  var tip = document.getElementById('eclateTip');
+  if (!fig || !tip) return;
+
+  /* expand a `num` field into integers: "30–32" "45/46" "19/20" "8" */
+  function expandNums(numStr) {
+    var out = [];
+    String(numStr).split('/').forEach(function(part) {
+      part = part.trim();
+      var range = part.split(/[–—-]/);  /* en/em dash or hyphen */
+      if (range.length === 2 && /^\d+$/.test(range[0].trim()) && /^\d+$/.test(range[1].trim())) {
+        var a = +range[0], b = +range[1];
+        for (var i = a; i <= b; i++) out.push(i);
+      } else if (/^\d+$/.test(part)) {
+        out.push(+part);
+      }
+    });
+    return out;
+  }
+
+  /* number -> [parts] */
+  var byNum = {};
+  PARTS.forEach(function(p) {
+    expandNums(p.num).forEach(function(n) {
+      (byNum[n] = byNum[n] || []).push(p);
+    });
+  });
+
+  var activeBtn = null;
+
+  function buildTip(num, parts) {
+    var html = '<span class="tip-num">N° ' + num + '</span>';
+    parts.forEach(function(p) {
+      html += '<div class="tip-part">'
+        + '<span class="tip-ref">' + p.ref + '</span>'
+        + '<span class="tip-name-fr">' + p.nameFr + '</span>'
+        + '<span class="tip-name-en">' + p.nameEn + '</span>'
+        + (p.crit ? '<span class="tip-crit">🚨 Critique</span>' : '')
+        + '</div>';
+    });
+    return html;
+  }
+
+  function showTip(btn, num, parts) {
+    tip.innerHTML = buildTip(num, parts);
+    tip.classList.add('show');
+    tip.setAttribute('aria-hidden', 'false');
+
+    var bx = parseFloat(btn.style.left);   /* % */
+    var by = parseFloat(btn.style.top);    /* % */
+    var fw = fig.clientWidth, fh = fig.clientHeight;
+    var cx = bx / 100 * fw, cy = by / 100 * fh;
+    var tw = tip.offsetWidth, th = tip.offsetHeight;
+    var gap = 14;
+
+    /* right column → tip opens left, else right */
+    var left = (bx > 50) ? (cx - gap - tw) : (cx + gap);
+    if (left < 4) left = 4;
+    if (left + tw > fw - 4) left = fw - 4 - tw;
+
+    var top = cy - th / 2;
+    if (top < 4) top = 4;
+    if (top + th > fh - 4) top = fh - 4 - th;
+
+    tip.style.left = left + 'px';
+    tip.style.top  = top + 'px';
+  }
+
+  function hideTip() {
+    tip.classList.remove('show');
+    tip.setAttribute('aria-hidden', 'true');
+    if (activeBtn) { activeBtn.classList.remove('active'); activeBtn = null; }
+  }
+
+  function flashRows(parts) {
+    /* clear filters so the rows exist, then scroll + flash */
+    state.filter = ''; state.activeCat = '';
+    filterIn.value = '';
+    catFilter.querySelectorAll('.cat-btn').forEach(function(b) {
+      b.classList.toggle('active', b.dataset.cat === '');
+    });
+    renderRows();
+
+    var first = null;
+    parts.forEach(function(p) {
+      var row = document.getElementById('row-' + p.ref);
+      if (!row) return;
+      if (!first) first = row;
+      row.classList.remove('row-flash');
+      void row.offsetWidth;       /* restart animation */
+      row.classList.add('row-flash');
+      setTimeout(function() { row.classList.remove('row-flash'); }, 1600);
+    });
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  Object.keys(COORDS).forEach(function(numKey) {
+    var num = +numKey;
+    var parts = byNum[num];
+    if (!parts || !parts.length) return;   /* skip uncatalogued numbers */
+
+    var xy = COORDS[num];
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'eclate-hotspot';
+    btn.style.left = xy[0] + '%';
+    btn.style.top  = xy[1] + '%';
+    var labelParts = parts.map(function(p) { return p.nameFr + ' (' + p.ref + ')'; }).join(', ');
+    btn.setAttribute('aria-label', 'Pièce n° ' + num + ' : ' + labelParts);
+
+    btn.addEventListener('mouseenter', function() { showTip(btn, num, parts); });
+    btn.addEventListener('mouseleave', hideTip);
+    btn.addEventListener('focus', function() {
+      if (activeBtn) activeBtn.classList.remove('active');
+      activeBtn = btn; btn.classList.add('active');
+      showTip(btn, num, parts);
+    });
+    btn.addEventListener('blur', hideTip);
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      flashRows(parts);
+    });
+
+    fig.appendChild(btn);
+  });
+})();
 
 /* ============================================================
    THEME TOGGLE
@@ -1056,6 +1300,23 @@ renderRows();
       var srcMap = { fr:'Fournisseurs EU · 02', en:'EU Suppliers · 02', nl:'EU Leveranciers · 02', de:'EU-Lieferanten · 02' };
       srcKick.textContent = srcMap[lang] || srcMap.fr;
     }
+
+    /* update exploded-view section */
+    function setTxt(id, map) { var el = document.getElementById(id); if (el) el.textContent = map[lang] || map.fr; }
+    setTxt('eclateKicker', { fr:'Vue éclatée · 00', en:'Exploded View · 00', nl:'Explosietekening · 00', de:'Explosionszeichnung · 00' });
+    setTxt('eclateTitle',  { fr:'Schéma interactif', en:'Interactive Diagram', nl:'Interactief schema', de:'Interaktives Schema' });
+    setTxt('eclateLede',   {
+      fr:'Vue éclatée officielle Weber (réf. 3741053). Survolez un numéro pour afficher la désignation et la référence de la pièce.',
+      en:'Official Weber exploded view (ref. 3741053). Hover a number to show the part designation and reference.',
+      nl:'Officiële Weber-explosietekening (ref. 3741053). Beweeg over een nummer om de benaming en referentie van het onderdeel te tonen.',
+      de:'Offizielle Weber-Explosionszeichnung (Ref. 3741053). Fahren Sie über eine Nummer, um Bezeichnung und Referenz des Teils anzuzeigen.'
+    });
+    setTxt('eclateHint',   {
+      fr:'Survolez un numéro · cliquez pour le retrouver dans le tableau',
+      en:'Hover a number · click to locate it in the table',
+      nl:'Beweeg over een nummer · klik om het in de tabel te vinden',
+      de:'Über eine Nummer fahren · klicken, um es in der Tabelle zu finden'
+    });
   }
 
   /* init */
